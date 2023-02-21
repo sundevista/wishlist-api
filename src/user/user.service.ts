@@ -1,9 +1,9 @@
-import {Injectable, NotFoundException, OnModuleInit} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import {InjectModel} from "@nestjs/mongoose";
-import {User, UserDocument} from "./schemas/user.schema";
-import {Model} from "mongoose";
+import { InjectModel } from "@nestjs/mongoose";
+import { User, UserDocument } from "./schemas/user.schema";
+import { Model } from "mongoose";
 import * as bcrypt from "bcrypt";
 
 @Injectable()
@@ -12,22 +12,8 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>
   ) {}
 
-  async signup(createUserDto: CreateUserDto) {
-    const salt = await bcrypt.genSalt();
-    createUserDto.password = await bcrypt.hash(createUserDto.password, salt);
-
+  async create(createUserDto: CreateUserDto) {
     return this.userModel.create(createUserDto);
-  }
-
-  async login(email: string, password: string) {
-    const user = await this.userModel.findOne({ email });
-
-    if (user) {
-      const match = await bcrypt.compare(password, user.password);
-      if (match) return 'Credentials are correct!';
-    }
-
-    return 'Invalid Invalid!';
   }
 
   async findAll() {
