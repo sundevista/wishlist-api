@@ -10,8 +10,13 @@ export class UserController {
 
   @Post()
   @UseFilters(new ValidationErrorFilter())
-  async create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async signup(@Body() createUserDto: CreateUserDto) {
+    return this.userService.signup(createUserDto);
+  }
+
+  @Get('login')
+  async login(@Body() data: { email: string, password: string }) {
+    return this.userService.login(data.email, data.password);
   }
 
   @Get()
