@@ -14,29 +14,24 @@ export class UserController {
     return this.userService.signup(createUserDto);
   }
 
-  @Get('login')
-  async login(@Body() data: { email: string, password: string }) {
-    return this.userService.login(data.email, data.password);
-  }
-
   @Get()
   async findAll() {
     return this.userService.findAll();
   }
 
-  @Get(':email')
-  async findOne(@Param('email') email: string) {
-    return this.userService.findOneByEmail(email);
+  @Get(':username')
+  async findOne(@Param('username') username: string) {
+    return this.userService.findOneByUsername(username);
   }
 
-  @Patch(':email')
+  @Patch(':username')
   @UseFilters(new ValidationErrorFilter())
-  async update(@Param('email') email: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(email, updateUserDto);
+  async update(@Param('username') username: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(username, updateUserDto);
   }
 
-  @Delete(':email')
-  async remove(@Param('email') email: string) {
-    return this.userService.remove(email);
+  @Delete(':username')
+  async remove(@Param('username') username: string) {
+    return this.userService.remove(username);
   }
 }

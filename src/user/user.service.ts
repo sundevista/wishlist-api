@@ -12,7 +12,10 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async signup(createUserDto: CreateUserDto) {
+    const salt = await bcrypt.genSalt();
+    createUserDto.password = await bcrypt.hash(createUserDto.password, salt);
+
     return this.userModel.create(createUserDto);
   }
 
@@ -20,20 +23,20 @@ export class UserService {
     return this.userModel.find();
   }
 
-  async findOneByEmail(email: string) {
-    const user = await this.userModel.findOne({ email });
+  async findOneByUsername(username: string) {
+    const user = await this.userModel.findOne({ username });
 
     if (!user)
-      throw new NotFoundException('User with given email was not found');
+      throw new NotFoundException('User with given username was not found');
 
     return user;
   }
 
-  async update(email: string, updateUserDto: UpdateUserDto) {
-    return this.userModel.findOneAndUpdate({ email }, updateUserDto, { runValidators: true });
+  async update(username: string, updateUserDto: UpdateUserDto) {
+    return this.userModel.findOneAndUpdate({ username }, updateUserDto, { runValidators: true });
   }
 
-  async remove(email: string) {
-    return this.userModel.findOneAndRemove({ email });
+  async remove(username: string) {
+    return this.userModel.findOneAndRemove({ username });
   }
 }
