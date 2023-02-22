@@ -1,9 +1,19 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, UseFilters, Req} from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseFilters,
+  Req,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ValidationErrorFilter } from "../exceptions/validation-error.filter";
-import {Public} from "../decorators/public.decorator";
+import { ValidationErrorFilter } from '../exceptions/validation-error.filter';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('user')
 export class UserController {

@@ -1,15 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectModel } from "@nestjs/mongoose";
-import { User, UserDocument } from "./schemas/user.schema";
-import { Model } from "mongoose";
-import * as bcrypt from "bcrypt";
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from './schemas/user.schema';
+import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
@@ -33,7 +33,9 @@ export class UserService {
   }
 
   async update(username: string, updateUserDto: UpdateUserDto) {
-    return this.userModel.findOneAndUpdate({ username }, updateUserDto, { runValidators: true });
+    return this.userModel.findOneAndUpdate({ username }, updateUserDto, {
+      runValidators: true,
+    });
   }
 
   async remove(username: string) {

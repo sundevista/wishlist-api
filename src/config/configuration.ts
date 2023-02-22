@@ -10,5 +10,5 @@ export default () => ({
   auth: {
     jwtSecret: process.env.JWT_SECRET,
     jwtExpirationTime: process.env.JWT_EXPIRATION_TIME,
-  }
+  },
 });
