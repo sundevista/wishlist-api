@@ -1,9 +1,15 @@
-export class UpdateUserDto {
-  username: string;
-  email: string;
-  password: string;
-  full_name: string;
+import {PartialType} from "@nestjs/mapped-types";
+import {CreateUserDto} from "./create-user.dto";
+import {IsOptional, MaxLength, MinLength} from "class-validator";
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {
+  @IsOptional()
+  @MinLength(5, { message: '$property should be longer than $constraint1 characters' })
+  @MaxLength(20, { message: '$property should be less than $constraint1 characters' })
   city: string;
+
+  @IsOptional()
+  @MinLength(8, { message: '$property should be longer than $constraint1 characters' })
+  @MaxLength(32, { message: '$property should be less than $constraint1 characters' })
   address: string;
-  wishes: number[];
 }

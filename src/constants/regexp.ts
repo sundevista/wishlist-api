@@ -1,2 +1,2 @@
-export const userUsername = /^[A-Za-z0-9_]+$/;
-export const userEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+export const userUsername = /^[a-z0-9_]+$/;
+export const propertyAndValueExtractorFromDuplicateMessage = /{ ([a-z_]+): \"(.+)\" }/;

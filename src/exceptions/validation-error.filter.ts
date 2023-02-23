@@ -1,14 +1,20 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Response } from 'express';
-import { Error } from 'mongoose';
-import ValidationError = Error.ValidationError;
 import { MongoServerError } from 'mongoose/node_modules/mongodb';
+import {propertyAndValueExtractorFromDuplicateMessage} from "../constants/regexp";
 
-//TODO: make an error message prettifier to response a user with more simple and comprehensive information
+const formatExceptionMessageForUser = (exception: MongoServerError) => {
+  if (exception.code === 11000) {
+    const [_, prop, value] = exception.message.match(propertyAndValueExtractorFromDuplicateMessage);
+    return `${prop} '${value}' is already taken, try choose another one`;
+  }
 
-@Catch(ValidationError, MongoServerError)
+  return exception.message;
+}
+
+@Catch(MongoServerError)
 export class ValidationErrorFilter implements ExceptionFilter {
-  catch(exception: ValidationError | MongoServerError, host: ArgumentsHost) {
+  catch(exception: MongoServerError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = 400;
@@ -16,7 +22,7 @@ export class ValidationErrorFilter implements ExceptionFilter {
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
-      message: exception.message,
+      message: formatExceptionMessageForUser(exception),
     });
   }
 }

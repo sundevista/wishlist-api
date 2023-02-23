@@ -14,6 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationErrorFilter } from '../exceptions/validation-error.filter';
 import { Public } from '../decorators/public.decorator';
+import {FetchUsersDto} from "./dto/fetch-users.dto";
 
 @Controller('user')
 export class UserController {
@@ -28,7 +29,7 @@ export class UserController {
 
   @Public()
   @Get()
-  async findAll() {
+  async fetchUsers() {
     return this.userService.findAll();
   }
 

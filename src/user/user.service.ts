@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import {FetchUsersDto} from "./dto/fetch-users.dto";
 
 @Injectable()
 export class UserService {
@@ -19,7 +20,7 @@ export class UserService {
     return this.userModel.create(createUserDto);
   }
 
-  async findAll() {
+  async findAll(): Promise<FetchUsersDto[]> {
     return this.userModel.find();
   }
 

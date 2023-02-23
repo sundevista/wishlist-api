@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { TokenPayload } from './dto/token_payload';
+import { TokenPayload } from './dto/token-payload';
 
 @Injectable()
 export class AuthService {
