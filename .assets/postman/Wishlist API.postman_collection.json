@@ -22,22 +22,22 @@
 							"urlencoded": [
 								{
 									"key": "username",
-									"value": "csgo_enjoyer",
+									"value": "sofa_lord",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "csgo_enjoyer@gmail.com",
+									"value": "sofalord@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "full_name",
-									"value": "Андрій Симоненко",
+									"value": "Назарет",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "123456789xxx",
+									"value": "123456789",
 									"type": "text"
 								}
 							]
@@ -63,13 +63,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/user/csgo_fun",
+							"raw": "{{url}}/user/lol_enjoyer",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"user",
-								"csgo_fun"
+								"lol_enjoyer"
 							]
 						}
 					},
