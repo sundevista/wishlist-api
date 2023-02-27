@@ -34,4 +34,5 @@ Values provided in repo's `.env` are just examples, real `.env` should be hidden
 
 
 ### Other
+- `PGADMIN_DEFAULT_EMAIL`, `PGADMIN_DEFAULT_PASSWORD`: default credentials for pgadmin
 - `CORS_ALLOWED_ORIGIN`: allowed origin (frontend) protected with CORS (like `https://yourdomain.com`)
