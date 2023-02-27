@@ -1,20 +1,14 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Response } from 'express';
-import { MongoServerError } from 'mongoose/node_modules/mongodb';
-import {propertyAndValueExtractorFromDuplicateMessage} from "../constants/regexp";
+import {TypeORMError} from "typeorm";
 
-const formatExceptionMessageForUser = (exception: MongoServerError) => {
-  if (exception.code === 11000) {
-    const [_, prop, value] = exception.message.match(propertyAndValueExtractorFromDuplicateMessage);
-    return `${prop} '${value}' is already taken, try choose another one`;
-  }
-
-  return exception.message;
+const formatExceptionMessageForUser = (exception: TypeORMError) => {
+  return exception.name + exception.message;
 }
 
-@Catch(MongoServerError)
+@Catch(TypeORMError)
 export class ValidationErrorFilter implements ExceptionFilter {
-  catch(exception: MongoServerError, host: ArgumentsHost) {
+  catch(exception: TypeORMError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = 400;

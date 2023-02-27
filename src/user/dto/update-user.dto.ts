@@ -10,6 +10,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @IsOptional()
   @MinLength(8, { message: '$property should be longer than $constraint1 characters' })
-  @MaxLength(32, { message: '$property should be less than $constraint1 characters' })
+  @MaxLength(50, { message: '$property should be less than $constraint1 characters' })
   address: string;
 }

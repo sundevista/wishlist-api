@@ -41,7 +41,7 @@ export class UserController {
   @Patch()
   @UseFilters(new ValidationErrorFilter())
   async update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(req.user.username, updateUserDto);
+    return this.userService.update(req.user.id, updateUserDto);
   }
 
   @Delete(':username')
