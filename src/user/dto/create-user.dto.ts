@@ -6,8 +6,10 @@ import {
   MinLength,
 } from 'class-validator';
 import { userUsername } from '../../constants/regexp';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateUserDto {
+  @ApiProperty()
   @IsDefined({ message: '$property should be defined' })
   @MinLength(5, {
     message: '$property should be longer than $constraint1 characters',
@@ -21,6 +23,7 @@ export class CreateUserDto {
   })
   username: string;
 
+  @ApiProperty()
   @IsDefined({ message: '$property should be defined' })
   @MaxLength(70, {
     message: '$property should be less than $constraint1 characters',
@@ -28,6 +31,7 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
+  @ApiProperty()
   @IsDefined({ message: '$property should be defined' })
   @MinLength(4, {
     message: '$property should be longer than $constraint1 characters',
@@ -37,6 +41,7 @@ export class CreateUserDto {
   })
   full_name: string;
 
+  @ApiProperty()
   @IsDefined({ message: '$property should be defined' })
   @MinLength(8, {
     message: '$property should be longer than $constraint1 characters',
