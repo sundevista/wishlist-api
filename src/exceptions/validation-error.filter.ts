@@ -1,9 +1,17 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Response } from 'express';
-import {TypeORMError} from "typeorm";
+import {EntityPropertyNotFoundError, QueryFailedError, TypeORMError} from "typeorm";
+import {propertyAndValueExtractorFromDuplicateMessage} from "../constants/regexp";
 
 const formatExceptionMessageForUser = (exception: TypeORMError) => {
-  return `${exception.name}:  ${exception.message}`;
+  if (exception instanceof QueryFailedError && exception.message.includes('duplicate key')) {
+    const [_, prop, value] = exception.driverError.detail.match(propertyAndValueExtractorFromDuplicateMessage);
+    return `${prop} '${value}' is already taken, try choose another one`;
+  } else if (exception instanceof EntityPropertyNotFoundError) {
+    return 'Wrong schema, check scheme you sent';
+  }
+
+  return `Unexpected error: ${exception.name}`;
 }
 
 @Catch(TypeORMError)
