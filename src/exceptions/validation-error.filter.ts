@@ -3,7 +3,7 @@ import { Response } from 'express';
 import {TypeORMError} from "typeorm";
 
 const formatExceptionMessageForUser = (exception: TypeORMError) => {
-  return exception.name + exception.message;
+  return `${exception.name}:  ${exception.message}`;
 }
 
 @Catch(TypeORMError)

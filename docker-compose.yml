@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   postgres:
     image: postgres:15.1
@@ -20,6 +20,21 @@ services:
       - /data/pgadmin:/root/.pgadmin
     env_file:
       - .env
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: production
+    env_file:
+      - .env
+    environment:
+      DB_HOST: postgres
+    ports:
+      - "3000:3000"
+    networks:
+      - postgres
+    depends_on:
+      - postgres
 
 networks:
   postgres:
