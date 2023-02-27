@@ -7,33 +7,36 @@ import {
   Param,
   Delete,
   UseFilters,
-  Req,
+  Req, ClassSerializerInterceptor, UseInterceptors, SerializeOptions,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationErrorFilter } from '../exceptions/validation-error.filter';
 import { Public } from '../decorators/public.decorator';
+import {FETCH_ME, FETCH_ONE, FETCH_USERS} from "./entities/user.entity";
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Public()
   @Post()
+  @Public()
   @UseFilters(new ValidationErrorFilter())
   async signup(@Body() createUserDto: CreateUserDto) {
     return this.userService.signup(createUserDto);
   }
 
-  @Public()
   @Get()
+  @Public()
+  @SerializeOptions({ groups: [FETCH_USERS] })
   async fetchUsers() {
     return this.userService.findAll();
   }
 
-  @Public()
   @Get(':username')
+  @Public()
+  @SerializeOptions({ groups: [FETCH_ONE] })
   async findOne(@Param('username') username: string) {
     return this.userService.findOneByUsername(username);
   }
