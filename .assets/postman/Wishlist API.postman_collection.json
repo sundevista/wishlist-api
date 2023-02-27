@@ -63,13 +63,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/user/lol_enjoyer",
+							"raw": "{{url}}/user/sofa_lord",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"user",
-								"lol_enjoyer"
+								"sofa_lord"
 							]
 						}
 					},
@@ -158,6 +158,28 @@
 			]
 		},
 		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "FindMe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Auth",
 			"item": [
 				{
@@ -173,7 +195,7 @@
 							"urlencoded": [
 								{
 									"key": "username",
-									"value": "csgo_fun",
+									"value": "sofaslord@gmail.com",
 									"type": "text"
 								},
 								{
@@ -233,7 +255,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNzZ29fZnVuIiwic3ViIjoiNjNmNGU3NTAwNmExZjQxMjIxMGQ1MjVjIiwiaWF0IjoxNjc3MDczMDU5LCJleHAiOjE2Nzk2NjUwNTl9.pjffwGleEfcZg7foRnzcHAhzA-UI5RutBj93j86Qrpg",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNvZmFfbG9yZHMiLCJzdWIiOiJjNWUxN2Y5NS1jZDA2LTQ2ZWMtYjBkNC00NzZlZTI4OWZjMzAiLCJpYXQiOjE2Nzc1MDc0OTksImV4cCI6MTY4MDA5OTQ5OX0.0QUAt7sz4WmvLKBT2xqrQkjkXIZ8BNwGXZyWhjvGHiQ",
 				"type": "string"
 			}
 		]
