@@ -1,5 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
-import {Exclude, Expose} from "class-transformer";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude, Expose } from 'class-transformer';
 
 export const FETCH_USERS = 'fetch_users';
 export const FETCH_ONE = 'fetch_one';

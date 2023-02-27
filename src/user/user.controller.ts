@@ -7,14 +7,15 @@ import {
   Param,
   Delete,
   UseFilters,
-  Req, ClassSerializerInterceptor, UseInterceptors, SerializeOptions,
+  Req,
+  SerializeOptions,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationErrorFilter } from '../exceptions/validation-error.filter';
 import { Public } from '../decorators/public.decorator';
-import {FETCH_ME, FETCH_ONE, FETCH_USERS} from "./entities/user.entity";
+import { FETCH_ONE, FETCH_USERS } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {

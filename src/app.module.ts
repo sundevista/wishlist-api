@@ -5,8 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {User} from "./user/entities/user.entity";
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './user/entities/user.entity';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import {User} from "./user/entities/user.entity";
       imports: [ConfigModule.forRoot({ load: [configuration] })],
       useFactory: (configService: ConfigService) => ({
         ...configService.get<object>('database.config'),
-        entities: [User]
+        entities: [User],
       }),
       inject: [ConfigService],
     }),

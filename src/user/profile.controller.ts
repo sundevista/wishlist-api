@@ -1,6 +1,6 @@
-import {Controller, Get, Req, SerializeOptions} from "@nestjs/common";
-import {UserService} from "./user.service";
-import {FETCH_ME, FETCH_ONE} from "./entities/user.entity";
+import { Controller, Get, Req, SerializeOptions } from '@nestjs/common';
+import { UserService } from './user.service';
+import { FETCH_ME, FETCH_ONE } from './entities/user.entity';
 
 @Controller('profile')
 export class ProfileController {
