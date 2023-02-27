@@ -13,7 +13,7 @@ export class CreateUserDto {
   email: string;
 
   @IsDefined({ message: '$property should be defined' })
-  @MinLength(7, { message: '$property should be longer than $constraint1 characters' })
+  @MinLength(4, { message: '$property should be longer than $constraint1 characters' })
   @MaxLength(30, { message: '$property should be less than $constraint1 characters' })
   full_name: string;
 

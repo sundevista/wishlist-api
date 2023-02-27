@@ -20,7 +20,7 @@ export class UserService {
     return this.userModel.create(createUserDto);
   }
 
-  async findAll(): Promise<FetchUsersDto[]> {
+  async findAll() {
     return this.userModel.find();
   }
 
