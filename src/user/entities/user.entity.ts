@@ -27,14 +27,6 @@ export class User {
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
   full_name: string;
 
-  @Column({ type: 'varchar', length: 20, default: null, nullable: true })
-  @Expose({ groups: [FETCH_ME] })
-  city: string;
-
-  @Column({ type: 'varchar', length: 50, default: null, nullable: true })
-  @Expose({ groups: [FETCH_ME] })
-  address: string;
-
   @Column({ type: 'int', default: 1, nullable: false })
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
   level: number;
