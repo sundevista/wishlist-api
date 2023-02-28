@@ -13,8 +13,8 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ValidationErrorFilter } from '../exceptions/validation-error.filter';
-import { Public } from '../decorators/public.decorator';
+import { ValidationErrorFilter } from '../../exceptions/validation-error.filter';
+import { Public } from '../../decorators/public.decorator';
 import { FETCH_ONE, FETCH_USERS } from './entities/user.entity';
 
 @Controller('user')

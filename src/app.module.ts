@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
+import { UserModule } from './endpoints/user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './endpoints/auth/auth.module';
 import configuration from './config/configuration';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
+import { JwtAuthGuard } from './endpoints/auth/guard/jwt-auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/entities/user.entity';
+import { User } from './endpoints/user/entities/user.entity';
 
 @Module({
   imports: [

@@ -5,7 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { userUsername } from '../../constants/regexp';
+import { userUsername } from '../../../constants/regexp';
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateUserDto {
