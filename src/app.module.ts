@@ -7,7 +7,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './endpoints/auth/guard/jwt-auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './endpoints/user/entities/user.entity';
-import { MulterModule } from "@nestjs/platform-express";
+import { join } from 'path';
+import { ServeStaticModule } from "@nestjs/serve-static";
 
 @Module({
   imports: [
@@ -18,6 +19,9 @@ import { MulterModule } from "@nestjs/platform-express";
         entities: [User],
       }),
       inject: [ConfigService],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', configuration().static.source),
     }),
     UserModule,
     AuthModule,

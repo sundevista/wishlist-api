@@ -20,6 +20,7 @@ export default () => ({
     jwtExpirationTime: process.env.JWT_EXPIRATION_TIME,
   },
   static: {
-    avatarDestination: './static/avatar',
+    source: './static',
+    avatarDestination: './static/files/avatar',
   }
 });
