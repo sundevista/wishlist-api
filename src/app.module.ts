@@ -7,12 +7,13 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './endpoints/auth/guard/jwt-auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './endpoints/user/entities/user.entity';
+import { MulterModule } from "@nestjs/platform-express";
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule.forRoot({ load: [configuration] })],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         ...configService.get<object>('database.config'),
         entities: [User],
       }),
