@@ -21,6 +21,6 @@ export default () => ({
   },
   static: {
     source: './static',
-    avatarDestination: './static/files/avatar',
+    avatarDestination: './static/public/avatar',
   }
 });
