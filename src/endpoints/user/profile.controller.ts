@@ -6,12 +6,12 @@ import {
   Req,
   SerializeOptions,
   UploadedFile,
-  UseInterceptors
-} from "@nestjs/common";
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { FETCH_ME, FETCH_ONE } from './entities/user.entity';
-import { Public } from "../../decorators/public.decorator";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { Public } from '../../decorators/public.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('profile')
 export class ProfileController {

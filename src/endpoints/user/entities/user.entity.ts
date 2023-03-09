@@ -35,7 +35,7 @@ export class User {
   @Expose({ groups: [FETCH_ONE] })
   xp: number;
 
-  @Column({type: 'varchar', length: 32, nullable: true})
+  @Column({ type: 'varchar', length: 32, nullable: true })
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
   avatar: string;
 }

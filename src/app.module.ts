@@ -8,7 +8,7 @@ import { JwtAuthGuard } from './endpoints/auth/guard/jwt-auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './endpoints/user/entities/user.entity';
 import { join } from 'path';
-import { ServeStaticModule } from "@nestjs/serve-static";
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [

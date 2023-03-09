@@ -22,5 +22,5 @@ export default () => ({
   static: {
     source: './static',
     avatarDestination: './static/public/avatar',
-  }
+  },
 });
