@@ -9,7 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { FETCH_ME, FETCH_ONE, User } from "./entities/user.entity";
+import { FETCH_ME, FETCH_ONE, User } from './entities/user.entity';
 import { Public } from '../../decorators/public.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -37,7 +37,10 @@ export class ProfileController {
 
   @Post('uploadAvatar')
   @UseInterceptors(FileInterceptor('image'))
-  async setAvatar(@Req() req, @UploadedFile() image: Express.Multer.File): Promise<User> {
+  async setAvatar(
+    @Req() req,
+    @UploadedFile() image: Express.Multer.File,
+  ): Promise<User> {
     return this.userService.update(req.user.id, { avatar: image.filename });
   }
 }

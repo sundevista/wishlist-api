@@ -15,7 +15,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationErrorFilter } from '../../exceptions/validation-error.filter';
 import { Public } from '../../decorators/public.decorator';
-import { FETCH_ONE, FETCH_USERS, User } from "./entities/user.entity";
+import { FETCH_ONE, FETCH_USERS, User } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -31,7 +31,7 @@ export class UserController {
   @Get()
   @Public()
   @SerializeOptions({ groups: [FETCH_USERS] })
-  async fetchUsers(): Promise<User[]>{
+  async fetchUsers(): Promise<User[]> {
     return this.userService.findAll();
   }
 
@@ -44,7 +44,10 @@ export class UserController {
 
   @Patch()
   @UseFilters(new ValidationErrorFilter())
-  async update(@Req() req, @Body() updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    @Req() req,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<User> {
     return this.userService.update(req.user.id, updateUserDto);
   }
 

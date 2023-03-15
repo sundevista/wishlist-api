@@ -22,7 +22,7 @@ export class AuthService {
     }
 
     if (user && (await bcrypt.compare(pass, user.password))) {
-      const { password, ...result } = user;  //TODO: make simple mapper
+      const { password, ...result } = user; //TODO: make simple mapper
       return result;
     }
 
