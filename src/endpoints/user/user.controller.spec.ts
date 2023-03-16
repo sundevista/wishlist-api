@@ -32,5 +32,13 @@ describe('User Controller', () => {
 
       expect(await userController.fetchUsers()).toBe(userData);
     });
+
+    it('should return an empty array', async () => {
+      jest
+        .spyOn(userService, 'findAll')
+        .mockImplementation(() => new Promise((resolve) => resolve([])));
+
+      expect(await userController.fetchUsers()).toStrictEqual([]);
+    });
   });
 });
