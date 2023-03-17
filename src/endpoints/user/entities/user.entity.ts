@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
-import PublicFile from 'src/endpoints/files/entities/publicFile.entity';
+import PublicFile from './../../files/entities/publicFile.entity';
 
 export const FETCH_USERS = 'fetch_users';
 export const FETCH_ONE = 'fetch_one';

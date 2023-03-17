@@ -8,7 +8,7 @@ const userData: User[] = [
     username: 'alexgrenor',
     level: 1,
     xp: 0,
-    avatar: 'pic',
+    avatar: null,
     full_name: 'Alex Grenor',
     email: 'alex@gmail.com',
     password: '123456789',
@@ -20,7 +20,7 @@ describe('User Controller', () => {
   let userService: UserService;
 
   beforeEach(() => {
-    userService = new UserService(null);
+    userService = new UserService(null, null);
     userController = new UserController(userService);
   });
 
