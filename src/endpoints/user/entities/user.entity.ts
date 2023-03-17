@@ -1,5 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
+import PublicFile from 'src/endpoints/files/entities/publicFile.entity';
 
 export const FETCH_USERS = 'fetch_users';
 export const FETCH_ONE = 'fetch_one';
@@ -35,7 +42,11 @@ export class User {
   @Expose({ groups: [FETCH_ONE] })
   xp: number;
 
-  @Column({ type: 'varchar', length: 32, nullable: true })
+  @JoinColumn()
+  @OneToOne(() => PublicFile, {
+    eager: true,
+    nullable: true,
+  })
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
-  avatar: string;
+  avatar?: PublicFile;
 }

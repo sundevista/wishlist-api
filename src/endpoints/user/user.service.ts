@@ -5,11 +5,13 @@ import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { FilesService } from '../files/files.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    private filesService: FilesService,
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
@@ -61,6 +63,29 @@ export class UserService {
     }
 
     return updatedUser;
+  }
+
+  async addAvatar(id: string, imageBuffer: Buffer, filename: string) {
+    // Delete old avatar if exists
+    await this.deleteAvatar(id);
+
+    const avatar = await this.filesService.uploadPublicFile(
+      imageBuffer,
+      filename,
+    );
+    await this.userRepository.update(id, { avatar });
+    return avatar;
+  }
+
+  async deleteAvatar(id: string) {
+    const user = await this.findOneById(id);
+    const fileId = user.avatar?.id;
+    if (fileId) {
+      await this.userRepository.update(id, {
+        avatar: null,
+      });
+      await this.filesService.deletePublicFile(fileId);
+    }
   }
 
   async remove(id: string) {

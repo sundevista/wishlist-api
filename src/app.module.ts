@@ -7,8 +7,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './endpoints/auth/guard/jwt-auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './endpoints/user/entities/user.entity';
-import { join } from 'path';
-import { ServeStaticModule } from '@nestjs/serve-static';
+import PublicFile from './endpoints/files/entities/publicFile.entity';
 
 @Module({
   imports: [
@@ -16,12 +15,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       imports: [ConfigModule.forRoot({ load: [configuration] })],
       useFactory: async (configService: ConfigService) => ({
         ...configService.get<object>('database.config'),
-        entities: [User],
+        entities: [User, PublicFile],
       }),
       inject: [ConfigService],
-    }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', configuration().static.source),
     }),
     UserModule,
     AuthModule,
