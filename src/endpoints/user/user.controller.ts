@@ -19,6 +19,7 @@ import { ValidationErrorFilter } from '../../exceptions/validation-error.filter'
 import { Public } from '../../decorators/public.decorator';
 import { FETCH_ONE, FETCH_USERS, User } from './entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { RequestWithUser } from '../auth/interface/requestWithUser.interface';
 
 @Controller('user')
 export class UserController {
@@ -33,7 +34,10 @@ export class UserController {
 
   @Post('avatar')
   @UseInterceptors(FileInterceptor('file'))
-  async addAvatar(@Req() req, @UploadedFile() file: Express.Multer.File) {
+  async addAvatar(
+    @Req() req: RequestWithUser,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     return this.userService.addAvatar(
       req.user.id,
       file.buffer,
@@ -58,7 +62,7 @@ export class UserController {
   @Patch()
   @UseFilters(new ValidationErrorFilter())
   async update(
-    @Req() req,
+    @Req() req: RequestWithUser,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
     return this.userService.update(req.user.id, updateUserDto);

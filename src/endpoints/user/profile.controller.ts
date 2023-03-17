@@ -2,6 +2,7 @@ import { Controller, Get, Query, Req, SerializeOptions } from '@nestjs/common';
 import { UserService } from './user.service';
 import { FETCH_ME, FETCH_ONE, User } from './entities/user.entity';
 import { Public } from '../../decorators/public.decorator';
+import { RequestWithUser } from '../auth/interface/requestWithUser.interface';
 
 @Controller('profile')
 export class ProfileController {
@@ -9,7 +10,7 @@ export class ProfileController {
 
   @Get()
   @SerializeOptions({ groups: [FETCH_ONE, FETCH_ME] })
-  async findMe(@Req() req): Promise<User> {
+  async findMe(@Req() req: RequestWithUser): Promise<User> {
     return this.userService.findOneById(req.user.id);
   }
 

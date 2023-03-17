@@ -46,17 +46,17 @@ export class UserService {
     return user;
   }
 
-  async findOneById(id: string) {
-    const user = await this.userRepository.findOneBy({ id });
+  async findOneById(userId: string) {
+    const user = await this.userRepository.findOneBy({ id: userId });
 
     if (!user) throw new NotFoundException('User with given id was not found');
 
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    await this.userRepository.update(id, updateUserDto);
-    const updatedUser = await this.userRepository.findOneBy({ id });
+  async update(userId: string, updateUserDto: UpdateUserDto) {
+    await this.userRepository.update(userId, updateUserDto);
+    const updatedUser = await this.userRepository.findOneBy({ id: userId });
 
     if (!updatedUser) {
       throw new NotFoundException('User with given id was not found');
@@ -65,31 +65,31 @@ export class UserService {
     return updatedUser;
   }
 
-  async addAvatar(id: string, imageBuffer: Buffer, filename: string) {
+  async addAvatar(userId: string, imageBuffer: Buffer, filename: string) {
     // Delete old avatar if exists
-    await this.deleteAvatar(id);
+    await this.deleteAvatar(userId);
 
     const avatar = await this.filesService.uploadPublicFile(
       imageBuffer,
       filename,
     );
-    await this.userRepository.update(id, { avatar });
+    await this.userRepository.update(userId, { avatar });
     return avatar;
   }
 
-  async deleteAvatar(id: string) {
-    const user = await this.findOneById(id);
+  async deleteAvatar(userId: string) {
+    const user = await this.findOneById(userId);
     const fileId = user.avatar?.id;
     if (fileId) {
-      await this.userRepository.update(id, {
+      await this.userRepository.update(userId, {
         avatar: null,
       });
       await this.filesService.deletePublicFile(fileId);
     }
   }
 
-  async remove(id: string) {
-    const deleteResponse = await this.userRepository.delete(id);
+  async remove(userId: string) {
+    const deleteResponse = await this.userRepository.delete(userId);
     if (!deleteResponse.affected) {
       throw new NotFoundException('User not found');
     }
