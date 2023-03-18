@@ -1,6 +1,6 @@
 import { User } from './entities/user.entity';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
+import { UserController } from './users.controller';
+import { UserService } from './users.service';
 
 const userData: User[] = [
   {
@@ -8,7 +8,6 @@ const userData: User[] = [
     username: 'alexgrenor',
     level: 1,
     xp: 0,
-    avatar: null,
     full_name: 'Alex Grenor',
     email: 'alex@gmail.com',
     password: '123456789',

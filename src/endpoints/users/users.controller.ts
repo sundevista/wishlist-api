@@ -12,7 +12,7 @@ import {
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationErrorFilter } from '../../exceptions/validation-error.filter';
@@ -21,7 +21,7 @@ import { FETCH_ONE, FETCH_USERS, User } from './entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RequestWithUser } from '../auth/interface/requestWithUser.interface';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

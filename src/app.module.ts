@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './endpoints/user/user.module';
+import { UserModule } from './endpoints/user/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './endpoints/auth/auth.module';
 import configuration from './config/configuration';
