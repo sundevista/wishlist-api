@@ -1,15 +1,18 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-class PublicFile {
+class Collection {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column({ type: 'varchar' })
-  public url: string;
+  @Column({ type: 'boolean' })
+  public public: boolean;
 
   @Column({ type: 'varchar' })
-  public key: string;
+  public name: string;
+
+  @Column({ type: 'varchar' })
+  public description: string;
 }
 
-export default PublicFile;
+export default Collection;
