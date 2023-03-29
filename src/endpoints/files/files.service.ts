@@ -24,6 +24,7 @@ export class FilesService {
         Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
         Body: dataBuffer,
         Key: `${uuid()}.${filename.split('.').pop()}`,
+        ACL: 'public-read',
       })
       .promise();
 
