@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/endpoints/users/entities/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 class Collection {
@@ -13,6 +14,9 @@ class Collection {
 
   @Column({ type: 'varchar' })
   public description: string;
+
+  @ManyToOne(() => User, (user) => user.collections)
+  public user;
 }
 
 export default Collection;

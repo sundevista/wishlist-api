@@ -2,11 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import PublicFile from './../../files/entities/publicFile.entity';
+import Collection from 'src/endpoints/collections/entities/collection.entity';
 
 export const FETCH_USERS = 'fetch_users';
 export const FETCH_ONE = 'fetch_one';
@@ -49,4 +51,8 @@ export class User {
   })
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
   avatar?: PublicFile;
+
+  @JoinColumn()
+  @OneToMany(() => Collection, (collection) => collection.user)
+  collections?: Collection[];
 }
