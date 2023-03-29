@@ -1,10 +1,12 @@
 import { Expose } from 'class-transformer';
 import { User } from 'src/endpoints/users/entities/user.entity';
+import Wish from 'src/endpoints/wishes/entities/wish.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -21,6 +23,10 @@ class Collection {
 
   @Column({ type: 'varchar', nullable: true })
   public description: string;
+
+  @JoinColumn()
+  @OneToMany(() => Wish, (wish) => wish.collection)
+  public wishes: Wish[];
 
   @JoinColumn()
   @ManyToOne(() => User, (user) => user.collections)
