@@ -18,31 +18,31 @@ export const FETCH_ME = 'fetch_me';
 export class User {
   @PrimaryGeneratedColumn('uuid')
   @Exclude()
-  id: string;
+  public id: string;
 
   @Column({ type: 'varchar', length: 25, unique: true, nullable: false })
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
-  username: string;
+  public username: string;
 
   @Column({ type: 'varchar', length: 70, unique: true, nullable: false })
   @Expose({ groups: [FETCH_ME] })
-  email: string;
+  public email: string;
 
   @Column({ type: 'varchar', length: 60, nullable: false })
   @Exclude()
-  password: string;
+  public password: string;
 
   @Column({ type: 'varchar', length: 40, nullable: false })
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
-  full_name: string;
+  public full_name: string;
 
   @Column({ type: 'int', default: 1, nullable: false })
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
-  level: number;
+  public level: number;
 
   @Column({ type: 'int', default: 0, nullable: false })
   @Expose({ groups: [FETCH_ONE] })
-  xp: number;
+  public xp: number;
 
   @JoinColumn()
   @OneToOne(() => PublicFile, {
@@ -50,9 +50,9 @@ export class User {
     nullable: true,
   })
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
-  avatar?: PublicFile;
+  public avatar?: PublicFile;
 
   @JoinColumn()
   @OneToMany(() => Collection, (collection) => collection.user)
-  collections?: Collection[];
+  public collections?: Collection[];
 }
