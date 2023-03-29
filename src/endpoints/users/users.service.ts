@@ -14,6 +14,10 @@ export class UserService {
     private filesService: FilesService,
   ) {}
 
+  async saveEntity(user: User) {
+    await this.userRepository.save(user);
+  }
+
   async signup(createUserDto: CreateUserDto) {
     const salt = await bcrypt.genSalt();
     createUserDto.password = await bcrypt.hash(createUserDto.password, salt);

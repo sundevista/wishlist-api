@@ -6,7 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
+import { RequestWithUser } from '../auth/interface/requestWithUser.interface';
 import { CollectionsService } from './collections.service';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
@@ -16,8 +18,11 @@ export class CollectionsController {
   constructor(private readonly collectionsService: CollectionsService) {}
 
   @Post()
-  create(@Body() createCollectionDto: CreateCollectionDto) {
-    return this.collectionsService.create(createCollectionDto);
+  create(
+    @Req() req: RequestWithUser,
+    @Body() createCollectionDto: CreateCollectionDto,
+  ) {
+    return this.collectionsService.create(req.user.id, createCollectionDto);
   }
 
   @Get(':id')
@@ -34,7 +39,7 @@ export class CollectionsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.collectionsService.remove(+id);
+  remove(@Req() req: RequestWithUser, @Param('id') id: string) {
+    return this.collectionsService.remove(req.user.id, +id);
   }
 }

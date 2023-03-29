@@ -52,7 +52,7 @@ export class User {
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
   public avatar?: PublicFile;
 
-  @JoinColumn()
-  @OneToMany(() => Collection, (collection) => collection.user)
-  public collections?: Collection[];
+  @OneToMany(() => Collection, (collection) => collection.user, { eager: true })
+  @Expose({ groups: [FETCH_ONE] })
+  public collections: Collection[];
 }

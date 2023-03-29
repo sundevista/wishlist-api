@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UserService } from '../users/users.service';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 import Collection from './entities/collection.entity';
@@ -10,11 +11,21 @@ export class CollectionsService {
   constructor(
     @InjectRepository(Collection)
     private collectionRepository: Repository<Collection>,
+    private usersService: UserService,
   ) {}
 
-  async create(createCollectionDto: CreateCollectionDto) {
+  async create(userId: string, createCollectionDto: CreateCollectionDto) {
     const newCollection = this.collectionRepository.create(createCollectionDto);
+
     await this.collectionRepository.save(newCollection);
+
+    const user = await this.usersService.findOneById(userId);
+
+    if (user.collections) user.collections.push(newCollection);
+    else user.collections = [newCollection];
+
+    this.usersService.saveEntity(user);
+
     return newCollection;
   }
 
@@ -39,8 +50,16 @@ export class CollectionsService {
     return updatedCollection;
   }
 
-  async remove(id: number) {
-    const deleteResponse = await this.collectionRepository.delete(id);
+  async remove(userId: string, collectionId: number) {
+    const collection = await this.collectionRepository.findOne({
+      where: { id: collectionId },
+      relations: ['user'],
+    });
+
+    if (collection.user.id !== userId)
+      throw new BadRequestException('You have no access to this collection');
+
+    const deleteResponse = await this.collectionRepository.delete(collectionId);
     if (!deleteResponse.affected) {
       throw new NotFoundException('Collection with given id was not found');
     }

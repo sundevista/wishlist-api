@@ -1,5 +1,12 @@
+import { Expose } from 'class-transformer';
 import { User } from 'src/endpoints/users/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 class Collection {
@@ -12,11 +19,12 @@ class Collection {
   @Column({ type: 'varchar' })
   public name: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   public description: string;
 
+  @JoinColumn()
   @ManyToOne(() => User, (user) => user.collections)
-  public user;
+  public user: User;
 }
 
 export default Collection;
