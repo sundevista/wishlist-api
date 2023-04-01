@@ -11,6 +11,8 @@ const userData: User[] = [
     full_name: 'Alex Grenor',
     email: 'alex@gmail.com',
     password: '123456789',
+    avatar: null,
+    collections: []
   },
 ];
 
