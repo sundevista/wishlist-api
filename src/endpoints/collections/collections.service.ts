@@ -48,7 +48,7 @@ export class CollectionsService {
     return collection;
   }
 
-  async findOneWithWishes(id: number) {
+  async findOneWithChildRelations(id: number) {
     const collection = this.collectionsRepository.findOne({
       where: { id },
       relations: ['wishes'],
@@ -61,7 +61,7 @@ export class CollectionsService {
     return collection;
   }
 
-  async findOneWithRelations(id: number) {
+  async findOneWithParentRelations(id: number) {
     const collection = this.collectionsRepository.findOne({
       where: { id },
       relations: ['user'],

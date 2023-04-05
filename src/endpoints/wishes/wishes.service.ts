@@ -26,7 +26,7 @@ export class WishesService {
     file: Express.Multer.File,
     createWishDto: CreateWishDto,
   ) {
-    const collection = await this.collectionsService.findOneWithRelations(
+    const collection = await this.collectionsService.findOneWithParentRelations(
       collectionId,
     );
 
