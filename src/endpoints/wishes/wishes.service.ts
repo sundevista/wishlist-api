@@ -23,6 +23,7 @@ export class WishesService {
   async create(
     userId: string,
     collectionId: number,
+    file: Express.Multer.File,
     createWishDto: CreateWishDto,
   ) {
     const collection = await this.collectionsService.findOneWithRelations(
@@ -41,7 +42,9 @@ export class WishesService {
     if (collection.wishes) collection.wishes.push(newWish);
     else collection.wishes = [newWish];
 
-    this.collectionsService.saveEntity(collection);
+    await this.collectionsService.saveEntity(collection);
+
+    this.addImage(userId, newWish.id, file.buffer, file.originalname);
 
     return newWish;
   }
@@ -54,17 +57,20 @@ export class WishesService {
     return wish;
   }
 
-  async update(id: number, updateWishDto: UpdateWishDto) {
-    await this.wishesRepository.update(id, updateWishDto);
-    const updatedWish = await this.wishesRepository.findOneBy({
-      id,
+  async update(userId: string, wishId: number, updateWishDto: UpdateWishDto) {
+    const wish = await this.wishesRepository.findOne({
+      where: { id: wishId },
+      relations: ['collection', 'collection.user'],
     });
 
-    if (!updatedWish) {
-      throw new NotFoundException('Wish with given id was not found');
-    }
+    if (userId !== wish.collection.user.id)
+      throw new BadRequestException('You have no access to this collection');
 
-    return updatedWish;
+    if (!wish) throw new NotFoundException('Wish with given id was not found');
+
+    await this.wishesRepository.update(wishId, updateWishDto);
+
+    return wish;
   }
 
   async addImage(
@@ -86,7 +92,7 @@ export class WishesService {
   async deleteImage(userId: string, wishId: number) {
     const wish = await this.wishesRepository.findOne({
       where: { id: wishId },
-      relations: ['collection', 'user'],
+      relations: ['collection', 'collection.user'],
     });
 
     if (wish.collection.user.id !== userId)
@@ -104,11 +110,13 @@ export class WishesService {
   async remove(userId: string, wishId: number) {
     const wish = await this.wishesRepository.findOne({
       where: { id: wishId },
-      relations: ['collection', 'user'],
+      relations: ['collection', 'collection.user'],
     });
 
     if (wish.collection.user.id !== userId)
       throw new BadRequestException('You have no access to this wish');
+
+    await this.deleteImage(userId, wishId);
 
     const deleteResponse = await this.wishesRepository.delete(wishId);
     if (!deleteResponse.affected) {

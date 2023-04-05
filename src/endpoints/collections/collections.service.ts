@@ -48,6 +48,19 @@ export class CollectionsService {
     return collection;
   }
 
+  async findOneWithWishes(id: number) {
+    const collection = this.collectionsRepository.findOne({
+      where: { id },
+      relations: ['wishes'],
+    });
+
+    if (!collection) {
+      throw new NotFoundException('Collection with given id was not found');
+    }
+
+    return collection;
+  }
+
   async findOneWithRelations(id: number) {
     const collection = this.collectionsRepository.findOne({
       where: { id },

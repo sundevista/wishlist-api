@@ -27,7 +27,7 @@ export class CollectionsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.collectionsService.findOne(+id);
+    return this.collectionsService.findOneWithWishes(+id);
   }
 
   @Patch(':id')
