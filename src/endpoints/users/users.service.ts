@@ -32,8 +32,14 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  async findOneByUsername(username: string) {
+  async findOneByUsername(username: string, showPrivateInfo = false) {
     const user = await this.userRepository.findOneBy({ username });
+
+    if (!showPrivateInfo) {
+      user.collections = user.collections.filter(
+        (collection) => collection.public,
+      );
+    }
 
     if (!user)
       throw new NotFoundException('User with given username was not found');
