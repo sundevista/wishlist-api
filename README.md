@@ -22,3 +22,8 @@
 ## Environment variables
 
 You can use `.env.example` to create your `.env` file.
+
+
+## Migrations
+
+- Generate migrations: `npm run typeorm:generate-migration -- -n <name>`

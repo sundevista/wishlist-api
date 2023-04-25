@@ -1,5 +1,5 @@
-import Collection from 'src/endpoints/collections/entities/collection.entity';
-import PublicFile from 'src/endpoints/files/entities/publicFile.entity';
+import Collection from '../../collections/entities/collection.entity';
+import PublicFile from '../../files/entities/publicFile.entity';
 import {
   Column,
   Entity,
@@ -19,6 +19,9 @@ class Wish {
 
   @Column({ type: 'varchar', nullable: false })
   public description: string;
+
+  @Column({ nullable: false })
+  public internal: number;
 
   @Column({ type: 'int', nullable: false })
   public price: number;

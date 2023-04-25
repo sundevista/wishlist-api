@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
-import { User } from 'src/endpoints/users/entities/user.entity';
-import Wish from 'src/endpoints/wishes/entities/wish.entity';
+import { User } from '../../users/entities/user.entity';
+import Wish from '../../wishes/entities/wish.entity';
 import {
   Column,
   Entity,
