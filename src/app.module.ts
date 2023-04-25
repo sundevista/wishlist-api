@@ -12,6 +12,7 @@ import { WishesModule } from './endpoints/wishes/wishes.module';
 import PublicFile from './endpoints/files/entities/publicFile.entity';
 import Collection from './endpoints/collections/entities/collection.entity';
 import Wish from './endpoints/wishes/entities/wish.entity';
+import { RolesGuard } from './endpoints/auth/guard/role.guard';
 
 @Module({
   imports: [
@@ -33,6 +34,10 @@ import Wish from './endpoints/wishes/entities/wish.entity';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

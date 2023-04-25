@@ -7,6 +7,7 @@ import { config as awsConfig } from 'aws-sdk';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
   const configService = app.get(ConfigService);
 
   app.enableCors({ origin: configService.get('CORS_ALLOWED_ORIGIN') });

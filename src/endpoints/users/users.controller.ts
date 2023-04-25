@@ -17,9 +17,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationErrorFilter } from '../../exceptions/validation-error.filter';
 import { Public } from '../../decorators/public.decorator';
-import { FETCH_ONE, FETCH_USERS, User } from './entities/user.entity';
+import { FETCH_ONE, FETCH_USERS, User, UserRole } from './entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RequestWithUser } from '../auth/interface/requestWithUser.interface';
+import { Roles } from '../../decorators/roles.decorator';
 
 @Controller('users')
 export class UserController {
@@ -68,8 +69,14 @@ export class UserController {
     return this.userService.update(req.user.id, updateUserDto);
   }
 
+  @Delete()
+  async removeSelf(@Req() req: RequestWithUser): Promise<void> {
+    return this.userService.removeById(req.user.id);
+  }
+
   @Delete(':username')
-  async remove(@Param('username') username: string): Promise<void> {
-    return this.userService.remove(username);
+  @Roles(UserRole.Admin)
+  async removeSomeone(@Param('username') username: string): Promise<void> {
+    return this.userService.removeByUsername(username);
   }
 }

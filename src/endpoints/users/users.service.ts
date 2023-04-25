@@ -35,7 +35,7 @@ export class UserService {
   async findOneByUsername(username: string, showPrivateInfo = false) {
     const user = await this.userRepository.findOneBy({ username });
 
-    if (!showPrivateInfo) {
+    if (!showPrivateInfo && user?.collections) {
       user.collections = user.collections.filter(
         (collection) => collection.public,
       );
@@ -98,7 +98,12 @@ export class UserService {
     }
   }
 
-  async remove(userId: string) {
+  async removeByUsername(username: string) {
+    const user = await this.findOneByUsername(username);
+    await this.removeById(user.id);
+  }
+
+  async removeById(userId: string) {
     const deleteResponse = await this.userRepository.delete(userId);
     if (!deleteResponse.affected) {
       throw new NotFoundException('User not found');

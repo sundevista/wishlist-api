@@ -31,6 +31,8 @@ export class AuthService {
 
   async login(user: TokenPayload) {
     const payload = { username: user.username, sub: user.id };
-    return { access_token: this.jwtService.sign(payload) };
+    const foundUser = await this.userService.findOneById(user.id);
+    const { password, id, collections, ...rest } = foundUser; //TODO: make simple mapper
+    return { ...rest, access_token: this.jwtService.sign(payload) };
   }
 }
