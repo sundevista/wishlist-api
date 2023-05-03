@@ -6,12 +6,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { FilesService } from '../files/files.service';
+import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     private filesService: FilesService,
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
   ) {}
 
   async saveEntity(user: User) {
@@ -19,6 +23,19 @@ export class UserService {
   }
 
   async signup(createUserDto: CreateUserDto) {
+    this.httpService
+      .post(this.configService.get<string>('WEBHOOK_URL'), {
+        email: createUserDto.email,
+      })
+      .subscribe({
+        complete: () => {
+          console.log('sent email verification link');
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+
     const salt = await bcrypt.genSalt();
     createUserDto.password = await bcrypt.hash(createUserDto.password, salt);
 
