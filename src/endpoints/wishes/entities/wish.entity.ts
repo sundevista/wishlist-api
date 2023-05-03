@@ -20,9 +20,6 @@ class Wish {
   @Column({ type: 'varchar', nullable: false })
   public description: string;
 
-  @Column({ nullable: false })
-  public internal: number;
-
   @Column({ type: 'int', nullable: false })
   public price: number;
 
@@ -31,6 +28,12 @@ class Wish {
 
   @Column({ type: 'varchar', nullable: false })
   public link: string;
+
+  @Column({ type: 'int', nullable: false, default: 198 })
+  public age: number;
+
+  @Column({ type: 'int' })
+  public num: number;
 
   @JoinColumn()
   @ManyToOne(() => Collection, (collection) => collection.wishes)

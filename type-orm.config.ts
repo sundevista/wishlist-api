@@ -19,5 +19,6 @@ export default new DataSource({
   database: configService.get('POSTGRES_DB'),
   entities: [User, PublicFile, Wish, Collection],
   migrations: [],
+  migrationsRun: true,
   migrationsTableName: 'migrations',
 });
