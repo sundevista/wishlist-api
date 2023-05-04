@@ -9,17 +9,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CollectionsModule } from './endpoints/collections/collections.module';
 import { WishesModule } from './endpoints/wishes/wishes.module';
 import { RolesGuard } from './endpoints/auth/guard/role.guard';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
+    ClientsModule.register([
+      { name: 'ITEM_MICROSERVICE', transport: Transport.TCP },
+    ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule.forRoot({ load: [configuration] })],
       useFactory: async (configService: ConfigService) => ({
         ...configService.get<object>('database.config'),
-        entities: [],
         autoLoadEntities: true,
-        migrations: [],
-        migrationsTableName: 'migrations',
       }),
       inject: [ConfigService],
     }),

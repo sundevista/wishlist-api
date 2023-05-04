@@ -1,4 +1,4 @@
-import PublicFile from 'src/endpoints/files/entities/publicFile.entity';
+import PublicFile from '../../files/entities/publicFile.entity';
 import { CreateWishDto } from './create-wish.dto';
 import { PartialType } from '@nestjs/mapped-types';
 

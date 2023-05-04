@@ -1,10 +1,10 @@
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
-import { User } from './src/endpoints/users/entities/user.entity';
-import PublicFile from './src/endpoints/files/entities/publicFile.entity';
-import Wish from './src/endpoints/wishes/entities/wish.entity';
-import Collection from './src/endpoints/collections/entities/collection.entity';
+import { User } from './services/rest-api/endpoints/users/entities/user.entity';
+import PublicFile from './services/rest-api/endpoints/files/entities/publicFile.entity';
+import Wish from './services/rest-api/endpoints/wishes/entities/wish.entity';
+import Collection from './services/rest-api/endpoints/collections/entities/collection.entity';
 
 config();
 
