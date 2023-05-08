@@ -49,7 +49,7 @@ export class UserController {
   @Get()
   @Public()
   @SerializeOptions({ groups: [FETCH_USERS] })
-  async fetchUsers(): Promise<User[]> {
+  async fetchUsers() {
     return this.userService.findAll();
   }
 

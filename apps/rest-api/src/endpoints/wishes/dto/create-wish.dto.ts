@@ -1,12 +1,5 @@
 import { Transform } from 'class-transformer';
-import {
-  IsDefined,
-  IsNumber,
-  Max,
-  MaxLength,
-  Min,
-  MinLength,
-} from 'class-validator';
+import { IsDefined, Max, MaxLength, Min, MinLength } from 'class-validator';
 
 export class CreateWishDto {
   @IsDefined()

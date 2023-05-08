@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,12 +11,13 @@ import { FilesService } from '../files/files.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import Wish from './entities/wish.entity';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class WishesService {
   constructor(
-    @InjectRepository(Wish)
-    private wishesRepository: Repository<Wish>,
+    @InjectRepository(Wish) private wishesRepository: Repository<Wish>,
+    @Inject('LOGGER_SERVICE') private loggerService: ClientProxy,
     private collectionsService: CollectionsService,
     private filesService: FilesService,
   ) {}
@@ -37,14 +39,18 @@ export class WishesService {
       throw new BadRequestException('You have no access to this collection');
 
     const newWish = await this.wishesRepository.create(createWishDto);
-    this.wishesRepository.save(newWish);
+    await this.wishesRepository.save(newWish);
 
     if (collection.wishes) collection.wishes.push(newWish);
     else collection.wishes = [newWish];
 
     await this.collectionsService.saveEntity(collection);
-
-    this.addImage(userId, newWish.id, file.buffer, file.originalname);
+    await this.addImage(userId, newWish.id, file.buffer, file.originalname);
+    await this.loggerService.emit('log_wish', {
+      createdBy: userId,
+      name: newWish.name,
+      link: newWish.link,
+    });
 
     return newWish;
   }

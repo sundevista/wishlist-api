@@ -1,8 +1,24 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "services",
+  "monorepo": true,
+  "sourceRoot": "apps/rest-api/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "tsConfigPath": "tsconfig.build.json"
+  },
+  "projects": {
+    "rest-api": {
+      "type": "application",
+      "root": "apps/rest-api",
+      "entryFile": "main",
+      "sourceRoot": "apps/rest-api/src"
+    },
+    "socket": {
+      "type": "application",
+      "root": "apps/socket",
+      "entryFile": "main",
+      "sourceRoot": "apps/socket/src"
+    }
   }
 }
