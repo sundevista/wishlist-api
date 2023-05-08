@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { TokenPayload } from './interface/tokenPayload.interface';
 import { userEmail } from '../../constants/regexp';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -34,5 +35,9 @@ export class AuthService {
     const foundUser = await this.userService.findOneById(user.id);
     const { password, id, collections, ...rest } = foundUser; //TODO: make simple mapper
     return { ...rest, access_token: this.jwtService.sign(payload) };
+  }
+
+  async signup(createUserDto: CreateUserDto) {
+    return this.userService.signup(createUserDto);
   }
 }

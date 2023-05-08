@@ -13,7 +13,6 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationErrorFilter } from '../../exceptions/validation-error.filter';
 import { Public } from '../../decorators/public.decorator';
@@ -25,13 +24,6 @@ import { Roles } from '../../decorators/roles.decorator';
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post()
-  @Public()
-  @UseFilters(new ValidationErrorFilter())
-  async signup(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.userService.signup(createUserDto);
-  }
 
   @Post('avatar')
   @UseInterceptors(FileInterceptor('file'))
