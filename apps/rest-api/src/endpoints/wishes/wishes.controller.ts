@@ -13,7 +13,7 @@ import {
 import { WishesService } from './wishes.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
-import { RequestWithUser } from '../auth/interface/requestWithUser.interface';
+import { RequestWithUser } from '../auth/interface/request-with-user.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('wishes')

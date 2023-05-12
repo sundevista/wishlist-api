@@ -8,7 +8,7 @@ import {
   Delete,
   Req,
 } from '@nestjs/common';
-import { RequestWithUser } from '../auth/interface/requestWithUser.interface';
+import { RequestWithUser } from '../auth/interface/request-with-user.interface';
 import { CollectionsService } from './collections.service';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';

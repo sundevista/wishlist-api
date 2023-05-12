@@ -2,7 +2,7 @@ import { Controller, Get, Query, Req, SerializeOptions } from '@nestjs/common';
 import { UserService } from './users.service';
 import { FETCH_ME, FETCH_ONE, User } from './entities/user.entity';
 import { Public } from '../../decorators/public.decorator';
-import { RequestWithUser } from '../auth/interface/requestWithUser.interface';
+import { RequestWithUser } from '../auth/interface/request-with-user.interface';
 
 @Controller('profile')
 export class ProfileController {

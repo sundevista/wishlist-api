@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { TokenPayload } from './interface/tokenPayload.interface';
 import { userEmail } from '../../constants/regexp';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { User } from '../users/entities/user.entity';
+import { LoginData } from './interface/login-data.interface';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(credential: string, pass: string) {
+  async validateUser(credential: string, pass: string): Promise<User | null> {
     let user;
 
     if (userEmail.test(credential)) {
@@ -29,10 +31,27 @@ export class AuthService {
     return null;
   }
 
-  async login(user: TokenPayload) {
-    const payload = { username: user.username, sub: user.id };
-    const foundUser = await this.userService.findOneById(user.id);
-    const { password, id, collections, ...rest } = foundUser; //TODO: make simple mapper
-    return { ...rest, access_token: this.jwtService.sign(payload) };
+  async signin(loginData: LoginData): Promise<{ access_token: string }> {
+    const validatedUser = await this.validateUser(
+      loginData.username,
+      loginData.password,
+    );
+
+    if (!validatedUser) throw new UnauthorizedException();
+
+    const payload = {
+      username: validatedUser.username,
+      sub: validatedUser.id,
+    };
+    return { access_token: this.jwtService.sign(payload) };
+  }
+
+  async signup(createUserDto: CreateUserDto) {
+    const pass = createUserDto.password;
+    await this.userService.signup(createUserDto);
+    return this.signin({
+      username: createUserDto.username,
+      password: pass,
+    });
   }
 }
