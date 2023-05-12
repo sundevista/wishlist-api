@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from 'src/decorators/roles.decorator';
 import { UserService } from 'src/endpoints/users/users.service';
-import { RequestWithUser } from '../interface/requestWithUser.interface';
+import { RequestWithUser } from '../interface/request-with-user.interface';
 import { UserRole } from 'src/endpoints/users/entities/user.entity';
 
 @Injectable()
