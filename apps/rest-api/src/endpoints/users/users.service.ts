@@ -1,14 +1,16 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { FilesService } from '../files/files.service';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { ClientProxy } from '@nestjs/microservices';
+import SearchService from '../search/search.service';
+import { faker } from '@faker-js/faker';
+import * as cliProgress from 'cli-progress';
 
 @Injectable()
 export class UserService {
@@ -17,14 +19,50 @@ export class UserService {
     private filesService: FilesService,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    private readonly userSearchService: SearchService,
   ) {}
+
+  createRandomUserObject(): CreateUserDto {
+    return {
+      email: `x_${faker.person.suffix()}_${faker.internet.email()}`,
+      full_name: `${faker.person.firstName()} ${faker.person.lastName()}`,
+      password: `${faker.internet.password()}`,
+      username: `x_${faker.internet.userName()}_${faker.person.zodiacSign()}`,
+    };
+  }
+
+  async seedUsers(count: number) {
+    if (count > 0) {
+      const bar = new cliProgress.SingleBar(
+        {},
+        cliProgress.Presets.shades_classic,
+      );
+
+      bar.start(count, 0);
+      for (let i = 0; i < count; i++) {
+        try {
+          const newUser = await this.userRepository.create(
+            this.createRandomUserObject(),
+          );
+          await this.userRepository.save(newUser);
+          await this.userSearchService.indexUser(newUser);
+        } catch (ex) {
+          i--;
+        }
+        bar.update(i);
+      }
+      bar.update(count);
+      bar.stop();
+    }
+  }
 
   async saveEntity(user: User) {
     await this.userRepository.save(user);
   }
 
   async signup(createUserDto: CreateUserDto) {
-    this.httpService
+    // Webhook email verification
+    /*this.httpService
       .post(this.configService.get<string>('WEBHOOK_URL'), {
         email: createUserDto.email,
       })
@@ -35,15 +73,25 @@ export class UserService {
         error: (err) => {
           console.error(err);
         },
-      });
+      });*/
 
+    // Salting password
     const salt = await bcrypt.genSalt();
     createUserDto.password = await bcrypt.hash(createUserDto.password, salt);
 
+    // Creating, saving and indexing user
     const newUser = await this.userRepository.create(createUserDto);
     await this.userRepository.save(newUser);
+    await this.userSearchService.indexUser(newUser);
 
     return newUser;
+  }
+
+  async searchUsers(text: string) {
+    const results = await this.userSearchService.searchUser(text);
+    const ids = results.map((result) => result.id);
+    if (!ids.length) return [];
+    return this.userRepository.find({ where: { id: In(ids) } });
   }
 
   async findAll() {
@@ -90,6 +138,8 @@ export class UserService {
       throw new NotFoundException('User with given id was not found');
     }
 
+    await this.userSearchService.update(updatedUser);
+
     return updatedUser;
   }
 
@@ -114,6 +164,7 @@ export class UserService {
       });
       await this.filesService.deletePublicFile(fileId);
     }
+    await this.userSearchService.remove(userId);
   }
 
   async removeByUsername(username: string) {

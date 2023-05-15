@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { FilesModule } from '../files/files.module';
 import { ConfigModule } from '@nestjs/config';
+import { SearchModule } from '../search/search.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
     FilesModule,
     HttpModule,
     ConfigModule,
+    SearchModule,
   ],
   controllers: [UserController, ProfileController],
   providers: [UserService],

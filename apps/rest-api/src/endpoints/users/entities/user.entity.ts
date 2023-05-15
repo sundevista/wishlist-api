@@ -36,7 +36,7 @@ export class User {
     nullable: false,
     default: [UserRole.Regular],
   })
-  @Expose({ groups: [] })
+  @Exclude()
   public roles: UserRole[];
 
   @Column({ type: 'varchar', length: 70, unique: true, nullable: false })

@@ -46,11 +46,16 @@ export class WishesService {
 
     await this.collectionsService.saveEntity(collection);
     await this.addImage(userId, newWish.id, file.buffer, file.originalname);
-    await this.loggerService.emit('log_wish', {
-      createdBy: userId,
-      name: newWish.name,
-      link: newWish.link,
-    });
+    await this.loggerService
+      .send(
+        { cmd: 'log_wish' },
+        {
+          createdBy: userId,
+          name: newWish.name,
+          link: newWish.link,
+        },
+      )
+      .subscribe();
 
     return newWish;
   }

@@ -2,6 +2,7 @@ version: "3.8"
 services:
   postgres:
     image: postgres:15.1
+    container_name: postgres
     networks:
       - api_net
     volumes:
@@ -12,6 +13,7 @@ services:
       - .env
   pgadmin:
     image: dpage/pgadmin4:6.18
+    container_name: pgadmin
     networks:
       - api_net
     ports:
@@ -23,11 +25,79 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbitmq
+    container_name: rabbitmq
     volumes:
       - /var/lib/rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
+    env_file:
+      - .env
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
+    container_name: es01
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - elastic
+    env_file:
+      - .env
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
+    container_name: es02
+    environment:
+      - node.name=es02
+      - discovery.seed_hosts=es01,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - cluster.name=es-docker-cluster
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data02:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+    env_file:
+      - .env
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
+    container_name: es03
+    environment:
+      - node.name=es03
+      - discovery.seed_hosts=es01,es02
+      - cluster.initial_master_nodes=es01,es02,es03
+      - cluster.name=es-docker-cluster
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data03:/usr/share/elasticsearch/data
+    networks:
+      - elastic
     env_file:
       - .env
   api:
@@ -47,6 +117,16 @@ services:
     depends_on:
       - postgres
 
+volumes:
+  data01:
+    driver: local
+  data02:
+    driver: local
+  data03:
+    driver: local
+
 networks:
+  elastic:
+    driver: bridge
   api_net:
     driver: bridge
