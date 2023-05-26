@@ -14,11 +14,6 @@ export const FETCH_USERS = 'fetch_users';
 export const FETCH_ONE = 'fetch_one';
 export const FETCH_ME = 'fetch_me';
 
-export enum UserRole {
-  Regular = 'regular',
-  Admin = 'admin',
-}
-
 @Entity({ name: 'user' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -28,16 +23,6 @@ export class User {
   @Column({ type: 'varchar', length: 25, unique: true, nullable: false })
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
   public username: string;
-
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    array: true,
-    nullable: false,
-    default: [UserRole.Regular],
-  })
-  @Expose({ groups: [] })
-  public roles: UserRole[];
 
   @Column({ type: 'varchar', length: 70, unique: true, nullable: false })
   @Expose({ groups: [FETCH_ME] })
