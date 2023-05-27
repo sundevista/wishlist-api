@@ -7,10 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "typeorm": "",
-    "typeorm:run-migrations": "npx typeorm-ts-node-commonjs migration:run -d ./type-orm.config.ts",
-    "typeorm:generate-migration": "npx typeorm-ts-node-commonjs -d ./type-orm.config.ts migration:generate ",
+    "typeorm:run-migrations": "npx typeorm-ts-node-commonjs migration:run -d config/type-orm.config.ts",
+    "typeorm:generate-migration": "npx typeorm-ts-node-commonjs -d config/type-orm.config.ts migration:generate",
     "typeorm:create-migration": "npx typeorm-ts-node-commonjs migration:create ",
-    "typeorm:revert-migration": "npx typeorm-ts-node-commonjs -d ./type-orm.config.ts migration:revert",
+    "typeorm:revert-migration": "npx typeorm-ts-node-commonjs -d config/type-orm.config.ts migration:revert",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

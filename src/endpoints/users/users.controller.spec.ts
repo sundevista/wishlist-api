@@ -12,7 +12,7 @@ const userData: User[] = [
     email: 'alex@gmail.com',
     password: '123456789',
     avatar: null,
-    collections: []
+    collections: [],
   },
 ];
 
