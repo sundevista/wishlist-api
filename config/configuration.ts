@@ -1,16 +1,13 @@
 import * as process from 'process';
 
 export default () => ({
-  database: {
-    config: {
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB,
-      synchronize: true,
-    },
+  postgres: {
+    type: process.env.DB_DIALECT,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
   },
   cors: {
     allowedOrigin: process.env.CORS_ALLOWED_ORIGIN,

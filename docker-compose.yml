@@ -2,22 +2,17 @@ version: "3.8"
 services:
   postgres:
     image: postgres:15.1
+    container_name: postgres
     networks:
       - postgres
     volumes:
       - /data/postgres:/data/postgres
     ports:
       - "${DB_PORT}:5432"
-    env_file:
-      - .env
-  pgadmin:
-    image: dpage/pgadmin4:6.18
-    networks:
-      - postgres
-    ports:
-      - "3500:80"
-    volumes:
-      - /data/pgadmin:/root/.pgadmin
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     env_file:
       - .env
   api:
@@ -28,8 +23,8 @@ services:
     env_file:
       - .env
     environment:
-      DB_HOST: postgres
-      DB_PORT: "5432"
+      - DB_HOST="postgres"
+      - DB_PORT="5432"
     ports:
       - "3000:3000"
     networks:

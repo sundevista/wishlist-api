@@ -26,4 +26,6 @@ You can use `.env.example` to create your `.env` file.
 
 ## Migrations
 
-- Generate migrations: `npm run typeorm:generate-migration -- -n <name>`
+- Generate migration: `npm run migration:generate --name=<name>`
+- Run migrations: `npm run migration:run`
+- Revert migration: `npm run migration:down`

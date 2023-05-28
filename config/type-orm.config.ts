@@ -1,11 +1,6 @@
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
-import { User } from '../src/endpoints/users/entities/user.entity';
-import PublicFile from '../src/endpoints/files/entities/publicFile.entity';
-import Wish from '../src/endpoints/wishes/entities/wish.entity';
-import Collection from '../src/endpoints/collections/entities/collection.entity';
-import { Initial1685203743221 } from '../migrations/1685203743221-Initial';
 
 config();
 
@@ -15,11 +10,12 @@ export default new DataSource({
   type: 'postgres',
   host: configService.get('DB_HOST'),
   port: configService.get('DB_PORT'),
-  username: configService.get('POSTGRES_USER'),
-  password: configService.get('POSTGRES_PASSWORD'),
-  database: configService.get('POSTGRES_DB'),
-  entities: [User, PublicFile, Wish, Collection],
-  migrations: [Initial1685203743221],
-  migrationsRun: true,
-  migrationsTableName: 'migrations',
+  username: configService.get('DB_USERNAME'),
+  password: configService.get('DB_PASSWORD'),
+  database: configService.get('DB_NAME'),
+  entities: ['dist/**/*.entity.js'],
+  migrations: ['dist/migrations/*.js'],
+  synchronize: false,
+  logging: false,
+  migrationsRun: false,
 });
