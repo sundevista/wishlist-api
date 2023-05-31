@@ -1,27 +1,15 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './endpoints/users/users.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AuthModule } from './endpoints/auth/auth.module';
-import configuration from '../config/configuration';
+import { UserModule } from './models/user/users.module';
+import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './endpoints/auth/guard/jwt-auth.guard';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { CollectionsModule } from './endpoints/collections/collections.module';
-import { WishesModule } from './endpoints/wishes/wishes.module';
+import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
+import { CollectionsModule } from './models/collection/collections.module';
+import { WishesModule } from './models/wish/wishes.module';
+import { CoreModule } from './core/core.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule.forRoot({ load: [configuration] })],
-      useFactory: async (configService: ConfigService) => ({
-        ...configService.get<object>('database.config'),
-        entities: [],
-        autoLoadEntities: true,
-        migrations: [],
-        migrationsTableName: 'migrations',
-      }),
-      inject: [ConfigService],
-    }),
+    CoreModule,
     UserModule,
     AuthModule,
     CollectionsModule,
