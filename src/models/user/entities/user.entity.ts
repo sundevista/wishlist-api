@@ -10,7 +10,6 @@ import { Exclude, Expose } from 'class-transformer';
 import PublicFile from '../../file/entities/publicFile.entity';
 import Collection from '../../collection/entities/collection.entity';
 import { RefreshToken } from '../../../auth/token/entities/refresh-token.entity';
-import { ApiProperty } from '@nestjs/swagger';
 
 export const FETCH_USERS = 'fetch_users';
 export const FETCH_ONE = 'fetch_one';

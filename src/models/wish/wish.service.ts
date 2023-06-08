@@ -5,18 +5,18 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CollectionsService } from '../collection/collections.service';
+import { CollectionService } from '../collection/collection.service';
 import { FilesService } from '../file/files.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import Wish from './entities/wish.entity';
 
 @Injectable()
-export class WishesService {
+export class WishService {
   constructor(
     @InjectRepository(Wish)
     private wishesRepository: Repository<Wish>,
-    private collectionsService: CollectionsService,
+    private collectionsService: CollectionService,
     private filesService: FilesService,
   ) {}
 
@@ -37,14 +37,14 @@ export class WishesService {
       throw new BadRequestException('You have no access to this collection');
 
     const newWish = await this.wishesRepository.create(createWishDto);
-    this.wishesRepository.save(newWish);
+    await this.wishesRepository.save(newWish);
 
     if (collection.wishes) collection.wishes.push(newWish);
     else collection.wishes = [newWish];
 
     await this.collectionsService.saveEntity(collection);
 
-    this.addImage(userId, newWish.id, file.buffer, file.originalname);
+    await this.addImage(userId, newWish.id, file.buffer, file.originalname);
 
     return newWish;
   }

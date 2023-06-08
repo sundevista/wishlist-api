@@ -11,7 +11,7 @@ import { UpdateCollectionDto } from './dto/update-collection.dto';
 import Collection from './entities/collection.entity';
 
 @Injectable()
-export class CollectionsService {
+export class CollectionService {
   constructor(
     @InjectRepository(Collection)
     private collectionsRepository: Repository<Collection>,
@@ -33,7 +33,7 @@ export class CollectionsService {
     if (user.collections) user.collections.push(newCollection);
     else user.collections = [newCollection];
 
-    this.usersService.saveEntity(user);
+    await this.usersService.saveEntity(user);
 
     return newCollection;
   }

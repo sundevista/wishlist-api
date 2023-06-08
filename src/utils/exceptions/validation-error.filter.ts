@@ -12,6 +12,7 @@ const formatExceptionMessageForUser = (exception: TypeORMError) => {
     exception instanceof QueryFailedError &&
     exception.message.includes('duplicate key')
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, prop, value] = exception.driverError.detail.match(
       propertyAndValueExtractorFromDuplicateMessage,
     );
