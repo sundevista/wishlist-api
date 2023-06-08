@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { FilesService } from '../file/files.service';
 import { PASSWORD_SALT_ROUNDS, USER_VALIDATION_ERRORS } from './user.constants';

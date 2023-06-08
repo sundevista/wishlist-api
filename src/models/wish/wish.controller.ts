@@ -10,10 +10,6 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { WishService } from './wish.service';
-import { CreateWishDto } from './dto/create-wish.dto';
-import { UpdateWishDto } from './dto/update-wish.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -22,6 +18,11 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+import { WishService } from './wish.service';
+import { CreateWishDto } from './dto/create-wish.dto';
+import { UpdateWishDto } from './dto/update-wish.dto';
 import { SWAGGER_WISH_SUMMARY } from './wish.constants';
 import Wish from './entities/wish.entity';
 import { FileUploadDto } from '../user/dto/file-upload.dto';

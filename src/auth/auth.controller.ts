@@ -1,9 +1,4 @@
 import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateUserDto } from '../models/user/dto/create-user.dto';
-import { LoginDto } from './dto/login.dto';
-import { UserWithTokensDto } from '../models/user/dto/user-with-tokens.dto';
-import { LogoutDto } from './dto/logout.dto';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -11,7 +6,13 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+
+import { AuthService } from './auth.service';
 import { SWAGGER_AUTH_SUMMARY } from './auth.constants';
+import { CreateUserDto } from '../models/user/dto/create-user.dto';
+import { LoginDto } from './dto/login.dto';
+import { LogoutDto } from './dto/logout.dto';
+import { UserWithTokensDto } from '../models/user/dto/user-with-tokens.dto';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { UserData } from '../models/user/decorator/user.decorator';
 

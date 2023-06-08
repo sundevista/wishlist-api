@@ -1,5 +1,6 @@
-import PublicFile from '../../file/entities/publicFile.entity';
 import { ApiProperty } from '@nestjs/swagger';
+
+import PublicFile from '../../file/entities/publicFile.entity';
 
 export class UserWithTokensDto {
   @ApiProperty()

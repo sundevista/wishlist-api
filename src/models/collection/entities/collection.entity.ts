@@ -1,5 +1,3 @@
-import { User } from '../../user/entities/user.entity';
-import Wish from '../../wish/entities/wish.entity';
 import {
   Column,
   Entity,
@@ -8,6 +6,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { User } from '../../user/entities/user.entity';
+import Wish from '../../wish/entities/wish.entity';
 
 @Entity()
 class Collection {

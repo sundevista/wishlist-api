@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { RedisService } from '../core/redis/redis.service';
 import { ConfigService } from '@nestjs/config';
+
+import { RedisService } from '../core/redis/redis.service';
 import { REDIS_CONSTANTS } from './auth.constants';
 
 @Injectable()
 export class AuthCacheService {
-  private tokenExpirationTime: number;
+  private readonly tokenExpirationTime: number;
 
   constructor(
     private readonly redisService: RedisService,

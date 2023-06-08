@@ -13,6 +13,7 @@ const userData: User[] = [
     password: '123456789',
     avatar: null,
     collections: [],
+    token: [],
   },
 ];
 

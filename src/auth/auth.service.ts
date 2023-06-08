@@ -3,6 +3,8 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+
 import { UserService } from '../models/user/user.service';
 import { USER_VALIDATION_REGEXPS } from '../models/user/user.constants';
 import { CreateUserDto } from '../models/user/dto/create-user.dto';
@@ -11,7 +13,6 @@ import { LoginDto } from './dto/login.dto';
 import { TokenService } from './token/token.service';
 import { AuthCacheService } from './auth-cache.service';
 import { UserWithTokensDto } from '../models/user/dto/user-with-tokens.dto';
-import { plainToInstance } from 'class-transformer';
 import { AUTH_VALIDATION_ERRORS } from './auth.constants';
 
 @Injectable()

@@ -8,9 +8,6 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { CollectionService } from './collection.service';
-import { CreateCollectionDto } from './dto/create-collection.dto';
-import { UpdateCollectionDto } from './dto/update-collection.dto';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -18,6 +15,10 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+
+import { CollectionService } from './collection.service';
+import { CreateCollectionDto } from './dto/create-collection.dto';
+import { UpdateCollectionDto } from './dto/update-collection.dto';
 import Collection from './entities/collection.entity';
 import { SWAGGER_COLLECTION_SUMMARY } from './collection.constants';
 import { UserData } from '../user/decorator/user.decorator';

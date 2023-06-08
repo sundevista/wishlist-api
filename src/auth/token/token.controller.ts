@@ -1,7 +1,8 @@
 import { Body, Controller, Put } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { TokenService } from './token.service';
 import { UpdateTokenDto } from './dto/token.dto';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SWAGGER_TOKEN_SUMMARY } from './token.constants';
 
 @ApiTags('auth/token')

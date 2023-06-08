@@ -1,5 +1,3 @@
-import Collection from '../../collection/entities/collection.entity';
-import PublicFile from '../../file/entities/publicFile.entity';
 import {
   Column,
   Entity,
@@ -8,6 +6,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import Collection from '../../collection/entities/collection.entity';
+import PublicFile from '../../file/entities/publicFile.entity';
 
 @Entity()
 class Wish {

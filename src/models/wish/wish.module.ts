@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { WishService } from './wish.service';
 import { WishController } from './wish.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import Wish from './entities/wish.entity';
 import { UserModule } from '../user/user.module';
 import { CollectionModule } from '../collection/collection.module';

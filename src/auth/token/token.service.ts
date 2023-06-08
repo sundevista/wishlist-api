@@ -1,11 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { JwtSignOptionEnum } from './token.constants';
-import { JwtService, JwtSignOptions } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { jwtTokensInterface } from './interfaces/tokens.interface';
-import { InjectRepository } from '@nestjs/typeorm';
-import { RefreshToken } from './entities/refresh-token.entity';
 import { Repository } from 'typeorm';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
+
+import { JwtSignOptionEnum } from './token.constants';
+import { jwtTokensInterface } from './interfaces/tokens.interface';
+import { RefreshToken } from './entities/refresh-token.entity';
 import { AUTH_VALIDATION_ERRORS } from '../auth.constants';
 import { AuthCacheService } from '../auth-cache.service';
 import { PayloadTokenInterface } from './interfaces/payload-token.interface';

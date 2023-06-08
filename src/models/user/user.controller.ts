@@ -13,11 +13,6 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { ValidationErrorFilter } from '../../utils/exceptions/validation-error.filter';
-import { FETCH_ME, FETCH_ONE, FETCH_USERS, User } from './entities/user.entity';
-import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -28,6 +23,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+import { UserService } from './user.service';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { ValidationErrorFilter } from '../../utils/exceptions/validation-error.filter';
+import { FETCH_ME, FETCH_ONE, FETCH_USERS, User } from './entities/user.entity';
 import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 import { UserData } from './decorator/user.decorator';
 import { SWAGGER_USER_RESPONSES, SWAGGER_USER_SUMMARY } from './user.constants';

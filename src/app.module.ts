@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { UserModule } from './models/user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CollectionModule } from './models/collection/collection.module';
