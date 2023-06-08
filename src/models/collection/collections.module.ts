@@ -3,7 +3,7 @@ import { CollectionsService } from './collections.service';
 import { CollectionsController } from './collections.controller';
 import Collection from './entities/collection.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from '../user/users.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Collection]), UserModule],

@@ -5,7 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { userUsername } from '../user.constants';
+import { USER_VALIDATION_REGEXPS } from '../user.constants';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -17,7 +17,7 @@ export class CreateUserDto {
   @MaxLength(25, {
     message: '$property should be less than $constraint1 characters',
   })
-  @Matches(userUsername, {
+  @Matches(USER_VALIDATION_REGEXPS.USERNAME_PATTERN, {
     message:
       '$property should include only english lowercase characters, numbers and underscore',
   })

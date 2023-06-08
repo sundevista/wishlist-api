@@ -3,7 +3,7 @@ import { WishesService } from './wishes.service';
 import { WishesController } from './wishes.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Wish from './entities/wish.entity';
-import { UserModule } from '../user/users.module';
+import { UserModule } from '../user/user.module';
 import { CollectionsModule } from '../collection/collections.module';
 import { FilesModule } from '../file/files.module';
 

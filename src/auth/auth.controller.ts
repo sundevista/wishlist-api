@@ -1,30 +1,69 @@
-import { Body, Controller, Get, Post, Req, UseFilters } from '@nestjs/common';
+import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Public } from './decorator/public.decorator';
-import { RequestWithUser } from './interface/request-with-user.interface';
-import { ValidationErrorFilter } from '../utils/exceptions/validation-error.filter';
 import { CreateUserDto } from '../models/user/dto/create-user.dto';
-import { LoginData } from './interface/login-data.interface';
+import { LoginDto } from './dto/login.dto';
+import { UserWithTokensDto } from '../models/user/dto/user-with-tokens.dto';
+import { LogoutDto } from './dto/logout.dto';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import { SWAGGER_AUTH_SUMMARY } from './auth.constants';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { UserData } from '../models/user/decorator/user.decorator';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Public()
-  @Post('signin')
-  async login(@Body() loginData: LoginData) {
-    return this.authService.signin(loginData);
+  @ApiOperation({ summary: SWAGGER_AUTH_SUMMARY.REGISTRATION })
+  @ApiCreatedResponse({ type: UserWithTokensDto })
+  @ApiBody({ type: CreateUserDto })
+  @ApiBearerAuth('JWT')
+  @Post('registration')
+  public async registration(
+    @Body() createUserDto: CreateUserDto,
+    @Headers() headers: string,
+  ): Promise<UserWithTokensDto> {
+    return this.authService.registration(createUserDto, headers['user-agent']);
   }
 
-  @Public()
-  @UseFilters(new ValidationErrorFilter())
-  @Post('signup')
-  async signup(@Body() createUserDto: CreateUserDto) {
-    return this.authService.signup(createUserDto);
+  @ApiOperation({ summary: SWAGGER_AUTH_SUMMARY.LOGIN })
+  @ApiCreatedResponse({ type: UserWithTokensDto })
+  @ApiBody({ type: LoginDto })
+  @Post('login')
+  public async login(
+    @Body() loginData: LoginDto,
+    @Headers() headers: string,
+  ): Promise<UserWithTokensDto> {
+    return this.authService.login(loginData, headers['user-agent']);
   }
 
-  @Get('me')
-  async me(@Req() req: RequestWithUser) {
-    return req.user;
+  @ApiOperation({ summary: SWAGGER_AUTH_SUMMARY.LOGOUT })
+  @ApiBody({ type: LogoutDto })
+  @ApiBearerAuth('JWT')
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  public async logout(
+    @Body() logoutDto: LogoutDto,
+    @UserData('userId') userId: string,
+    @UserData('accessToken') accessToken: string,
+  ): Promise<void> {
+    return this.authService.logout(userId, accessToken, logoutDto.refreshToken);
+  }
+
+  @ApiOperation({ summary: 'check' })
+  @ApiBearerAuth('JWT')
+  @UseGuards(JwtAuthGuard)
+  @Post('check')
+  public async check(
+    @UserData('userId') userId: string,
+    @UserData('accessToken') accessToken: string,
+  ): Promise<string> {
+    return userId + ' === ' + accessToken;
   }
 }

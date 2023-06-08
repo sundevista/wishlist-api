@@ -17,10 +17,14 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Wishlist API')
     .setDescription('The basic API that handles the requests of wishlist app.')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'JWT',
+    )
     .setVersion('0.1')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swagger', app, document);
+  SwaggerModule.setup('swagger', app, document, {});
 
   awsConfig.update({
     accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),

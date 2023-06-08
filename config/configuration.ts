@@ -9,11 +9,17 @@ export default () => ({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
   },
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+  },
   cors: {
     allowedOrigin: process.env.CORS_ALLOWED_ORIGIN,
   },
-  auth: {
-    jwtSecret: process.env.JWT_SECRET,
-    jwtExpirationTime: process.env.JWT_EXPIRATION_TIME,
+  jwt: {
+    accessTokenSecret: process.env.JWT_ACCESS_TOKEN_SECRET,
+    accessTokenExpirationTime: +process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME,
+    refreshTokenSecret: process.env.JWT_REFRESH_TOKEN_SECRET,
+    refreshTokenExpirationTime: +process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME,
   },
 });

@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { FilesService } from '../file/files.service';
+import { PASSWORD_SALT_ROUNDS, USER_VALIDATION_ERRORS } from './user.constants';
 
 @Injectable()
 export class UserService {
@@ -18,9 +19,19 @@ export class UserService {
     await this.userRepository.save(user);
   }
 
-  async signup(createUserDto: CreateUserDto) {
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
+  private async hashedPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, PASSWORD_SALT_ROUNDS);
+  }
+
+  public async isPasswordMatches(
+    password: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return bcrypt.compare(password, hashedPassword);
+  }
+
+  async createUser(createUserDto: CreateUserDto) {
+    const hashedPassword = await this.hashedPassword(createUserDto.password);
 
     const newUser = await this.userRepository.create({
       ...createUserDto,
@@ -38,6 +49,7 @@ export class UserService {
   async findOneByUsername(username: string, showPrivateInfo = false) {
     const user = await this.userRepository.findOneBy({ username });
 
+    // TODO: It should be done more properly
     if (!showPrivateInfo && user?.collections) {
       user.collections = user.collections.filter(
         (collection) => collection.public,
@@ -45,7 +57,7 @@ export class UserService {
     }
 
     if (!user)
-      throw new NotFoundException('User with given username was not found');
+      throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
 
     return user;
   }
@@ -54,7 +66,7 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ email });
 
     if (!user)
-      throw new NotFoundException('User with given email was not found');
+      throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
 
     return user;
   }
@@ -62,7 +74,8 @@ export class UserService {
   async findOneById(userId: string) {
     const user = await this.userRepository.findOneBy({ id: userId });
 
-    if (!user) throw new NotFoundException('User with given id was not found');
+    if (!user)
+      throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
 
     return user;
   }
@@ -72,7 +85,7 @@ export class UserService {
     const updatedUser = await this.userRepository.findOneBy({ id: userId });
 
     if (!updatedUser) {
-      throw new NotFoundException('User with given id was not found');
+      throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
     }
 
     return updatedUser;
@@ -109,7 +122,7 @@ export class UserService {
   async removeById(userId: string) {
     const deleteResponse = await this.userRepository.delete(userId);
     if (!deleteResponse.affected) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
     }
   }
 }
