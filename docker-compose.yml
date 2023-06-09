@@ -4,7 +4,7 @@ services:
     image: postgres:15.1
     container_name: postgres
     networks:
-      - postgres
+      - general
     volumes:
       - /data/postgres:/data/postgres
     ports:
@@ -24,6 +24,8 @@ services:
       - '${REDIS_PORT}:${REDIS_PORT}'
     env_file:
       - .env
+    networks:
+      - general
   redis-commander:
     container_name: redis-commander
     image: rediscommander/redis-commander:latest
@@ -38,16 +40,14 @@ services:
       target: production
     env_file:
       - .env
-    environment:
-      - DB_HOST="postgres"
-      - DB_PORT="5432"
     ports:
       - "3000:3000"
     networks:
-      - postgres
+      - general
     depends_on:
       - postgres
+      - redis
 
 networks:
-  postgres:
+  general:
     driver: bridge
