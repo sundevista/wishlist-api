@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsDefined, Max, MaxLength, Min, MinLength } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateWishDto {
   @ApiProperty()
@@ -35,6 +35,6 @@ export class CreateWishDto {
   @MaxLength(128)
   public link: string;
 
-  @ApiProperty({ type: String, format: 'binary' })
+  @ApiPropertyOptional({ type: String, format: 'binary' })
   public file: Express.Multer.File;
 }

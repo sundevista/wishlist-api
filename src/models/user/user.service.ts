@@ -81,6 +81,18 @@ export class UserService {
     return user;
   }
 
+  async findOneWithRelations(userId: string, relations: string[] = []) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: relations,
+    });
+
+    if (!user)
+      throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
+
+    return user;
+  }
+
   async update(userId: string, updateUserDto: UpdateUserDto) {
     await this.userRepository.update(userId, updateUserDto);
     const updatedUser = await this.userRepository.findOneBy({ id: userId });

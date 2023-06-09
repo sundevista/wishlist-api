@@ -31,7 +31,9 @@ class Wish {
   public link: string;
 
   @JoinColumn()
-  @ManyToOne(() => Collection, (collection) => collection.wishes)
+  @ManyToOne(() => Collection, (collection) => collection.wishes, {
+    onDelete: 'CASCADE',
+  })
   public collection: Collection;
 
   @JoinColumn()

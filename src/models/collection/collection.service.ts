@@ -23,17 +23,16 @@ export class CollectionService {
     await this.collectionsRepository.save(collection);
   }
 
+  //TODO: use cascade actions
   async create(userId: string, createCollectionDto: CreateCollectionDto) {
     const newCollection =
       this.collectionsRepository.create(createCollectionDto);
 
-    await this.collectionsRepository.save(newCollection);
+    const user = await this.usersService.findOneWithRelations(userId, [
+      'collections',
+    ]);
 
-    const user = await this.usersService.findOneById(userId);
-
-    if (user.collections) user.collections.push(newCollection);
-    else user.collections = [newCollection];
-
+    user.collections = [...user.collections, newCollection];
     await this.usersService.saveEntity(user);
 
     return newCollection;
@@ -62,10 +61,10 @@ export class CollectionService {
     return collection;
   }
 
-  async findOneWithParentRelations(id: number) {
+  async findOneWithRelations(id: number, relations: string[] = []) {
     const collection = this.collectionsRepository.findOne({
       where: { id },
-      relations: ['user'],
+      relations: relations,
     });
 
     if (!collection) {
@@ -73,15 +72,6 @@ export class CollectionService {
     }
 
     return collection;
-  }
-
-  async getCollectionsUserId(id: number) {
-    const collection = await this.collectionsRepository.findOne({
-      where: { id },
-      relations: ['user'],
-    });
-
-    return collection.user.id;
   }
 
   async update(id: number, updateCollectionDto: UpdateCollectionDto) {

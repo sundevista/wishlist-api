@@ -27,8 +27,9 @@ export class WishService {
     file: Express.Multer.File,
     createWishDto: CreateWishDto,
   ) {
-    const collection = await this.collectionsService.findOneWithParentRelations(
+    const collection = await this.collectionsService.findOneWithRelations(
       collectionId,
+      ['user', 'wishes'],
     );
 
     if (!collection)
@@ -38,14 +39,12 @@ export class WishService {
       throw new BadRequestException('You have no access to this collection');
 
     const newWish = await this.wishesRepository.create(createWishDto);
-    await this.wishesRepository.save(newWish);
 
-    if (collection.wishes) collection.wishes.push(newWish);
-    else collection.wishes = [newWish];
+    if (file)
+      await this.addImage(userId, newWish.id, file.buffer, file.originalname);
 
+    collection.wishes = [...collection.wishes, newWish];
     await this.collectionsService.saveEntity(collection);
-
-    await this.addImage(userId, newWish.id, file.buffer, file.originalname);
 
     return newWish;
   }

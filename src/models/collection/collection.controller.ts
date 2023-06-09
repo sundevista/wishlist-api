@@ -67,7 +67,10 @@ export class CollectionController {
   @ApiBearerAuth('JWT')
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  public async remove(@UserData() userId: string, @Param('id') id: string) {
+  public async remove(
+    @UserData('userId') userId: string,
+    @Param('id') id: string,
+  ) {
     return this.collectionsService.remove(userId, +id);
   }
 }

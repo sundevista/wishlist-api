@@ -46,19 +46,20 @@ export class User {
   public xp: number;
 
   @Expose({ groups: [FETCH_USERS, FETCH_ONE] })
-  @JoinColumn()
   @OneToOne(() => PublicFile, {
     eager: true,
     nullable: true,
   })
+  @JoinColumn()
   public avatar?: PublicFile;
 
   @Expose({ groups: [FETCH_ONE] })
-  @OneToMany(() => Collection, (collection) => collection.user, { eager: true })
+  @OneToMany(() => Collection, (collection) => collection.user, {
+    eager: true,
+    cascade: ['insert'],
+  })
   public collections: Collection[];
 
-  @OneToMany(() => RefreshToken, (token) => token.userId, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => RefreshToken, (token) => token.userId)
   token: RefreshToken[];
 }

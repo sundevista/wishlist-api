@@ -25,13 +25,14 @@ class Collection {
   public description: string;
 
   @JoinColumn()
-  @OneToMany(() => Wish, (wish) => wish.collection)
+  @OneToMany(() => Wish, (wish) => wish.collection, {
+    cascade: ['insert'],
+  })
   public wishes: Wish[];
 
   @JoinColumn()
   @ManyToOne(() => User, (user) => user.collections, {
     onDelete: 'CASCADE',
-    orphanedRowAction: 'delete',
   })
   public user: User;
 }
