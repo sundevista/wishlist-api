@@ -127,15 +127,12 @@ export class UserService {
     }
   }
 
-  async removeByUsername(username: string) {
-    const user = await this.findOneByUsername(username);
-    await this.removeById(user.id);
-  }
-
   async removeById(userId: string) {
+    await this.deleteAvatar(userId);
     const deleteResponse = await this.userRepository.delete(userId);
     if (!deleteResponse.affected) {
       throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
     }
+    await this.filesService.cleanupOrphanedFiles();
   }
 }

@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FilesService } from '../file/files.service';
 
 import { UserService } from '../user/user.service';
 import { CreateCollectionDto } from './dto/create-collection.dto';
@@ -16,6 +17,7 @@ export class CollectionService {
   constructor(
     @InjectRepository(Collection)
     private collectionsRepository: Repository<Collection>,
+    private filesService: FilesService,
     private usersService: UserService,
   ) {}
 
@@ -102,5 +104,6 @@ export class CollectionService {
     if (!deleteResponse.affected) {
       throw new NotFoundException('Collection with given id was not found');
     }
+    await this.filesService.cleanupOrphanedFiles();
   }
 }

@@ -9,6 +9,12 @@ export const USER_VALIDATION_ERRORS = {
   USER_NOT_FOUND: 'User not found',
 };
 
+export const USER_VISIBILITY_LEVELS = {
+  FETCH_USERS: 'fetch_users',
+  FETCH_ONE: 'fetch_one',
+  FETCH_ME: 'fetch_me',
+};
+
 export const SWAGGER_USER_SUMMARY = {
   FETCH_USERS: 'Returns all registered users',
   FIND_ONE: 'Returns specific user (by username)',

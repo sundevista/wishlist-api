@@ -15,7 +15,7 @@ export class FilesService {
     private readonly configService: ConfigService,
   ) {}
 
-  async uploadPublicFile(
+  public async uploadPublicFile(
     dataBuffer: Buffer,
     filename: string,
   ): Promise<PublicFile> {
@@ -38,7 +38,7 @@ export class FilesService {
     return newFile;
   }
 
-  async deletePublicFile(fileId: number) {
+  public async deletePublicFile(fileId: number): Promise<void> {
     const file = await this.publicFileRepository.findOneBy({ id: fileId });
     const s3 = new S3();
     await s3
@@ -48,5 +48,16 @@ export class FilesService {
       })
       .promise();
     await this.publicFileRepository.delete(fileId);
+  }
+
+  // Used to clean files those are not referenced by any wish or user
+  async cleanupOrphanedFiles(): Promise<void> {
+    const orphans: PublicFile[] = await this.publicFileRepository.query(
+      'SELECT public_file.* FROM public_file ' +
+        'LEFT JOIN wish w on public_file.id = w."imageId" ' +
+        'LEFT JOIN "user" u on public_file.id = u."avatarId" ' +
+        'WHERE w.id IS NULL AND u.id IS NULL',
+    );
+    orphans.forEach((file: PublicFile) => this.deletePublicFile(file.id));
   }
 }
