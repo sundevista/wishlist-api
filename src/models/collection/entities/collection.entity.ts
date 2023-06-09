@@ -12,8 +12,8 @@ import Wish from '../../wish/entities/wish.entity';
 
 @Entity()
 class Collection {
-  @PrimaryGeneratedColumn()
-  public id: number;
+  @PrimaryGeneratedColumn('uuid')
+  public id: string;
 
   @Column({ type: 'boolean' })
   public public: boolean;

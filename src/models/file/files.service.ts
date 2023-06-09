@@ -53,7 +53,7 @@ export class FilesService {
     return newFile;
   }
 
-  public async deletePublicFile(fileId: number): Promise<void> {
+  public async deletePublicFile(fileId: string): Promise<void> {
     const file = await this.publicFileRepository.findOneBy({ id: fileId });
     const s3 = new S3();
     await s3

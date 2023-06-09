@@ -49,19 +49,14 @@ export class WishController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createWishDto: CreateWishDto,
   ): Promise<Wish> {
-    return this.wishesService.create(
-      userId,
-      +collectionId,
-      file,
-      createWishDto,
-    );
+    return this.wishesService.create(userId, collectionId, file, createWishDto);
   }
 
   @ApiOperation({ summary: SWAGGER_WISH_SUMMARY.FIND_ONE })
   @ApiCreatedResponse({ type: Wish })
   @Get(':id')
   public async findOne(@Param('id') id: string): Promise<Wish> {
-    return this.wishesService.findOne(+id);
+    return this.wishesService.findOne(id);
   }
 
   @ApiOperation({ summary: SWAGGER_WISH_SUMMARY.COLLECTIONS_WISHES })
@@ -70,7 +65,7 @@ export class WishController {
   public async findCollectionsWishes(
     @Param('collectionId') collectionId: string,
   ): Promise<Wish[]> {
-    return this.wishesService.findCollectionsWishes(+collectionId);
+    return this.wishesService.findCollectionsWishes(collectionId);
   }
 
   @ApiOperation({ summary: SWAGGER_WISH_SUMMARY.UPDATE })
@@ -84,7 +79,7 @@ export class WishController {
     @Param('id') wishId: string,
     @Body() updateWishDto: UpdateWishDto,
   ): Promise<Wish> {
-    return this.wishesService.update(userId, +wishId, updateWishDto);
+    return this.wishesService.update(userId, wishId, updateWishDto);
   }
 
   @ApiOperation({ summary: SWAGGER_WISH_SUMMARY.UPDATE_IMAGE })
@@ -102,7 +97,7 @@ export class WishController {
   ): Promise<PublicFileEntity> {
     return this.wishesService.addImage(
       userId,
-      +wishId,
+      wishId,
       file.buffer,
       file.originalname,
     );
@@ -116,6 +111,6 @@ export class WishController {
     @UserData('userId') userId: string,
     @Param('id') id: string,
   ): Promise<void> {
-    return this.wishesService.remove(userId, +id);
+    return this.wishesService.remove(userId, id);
   }
 }

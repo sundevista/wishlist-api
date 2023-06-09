@@ -43,7 +43,7 @@ export class CollectionService {
     return newCollection;
   }
 
-  public async findOne(id: number): Promise<Collection> {
+  public async findOne(id: string): Promise<Collection> {
     const collection = this.collectionsRepository.findOneBy({ id });
 
     if (!collection) {
@@ -55,23 +55,12 @@ export class CollectionService {
     return collection;
   }
 
-  public async findOneWithChildRelations(id: number): Promise<Collection> {
-    const collection = this.collectionsRepository.findOne({
-      where: { id },
-      relations: ['wishes'],
-    });
-
-    if (!collection) {
-      throw new NotFoundException(
-        COLLECTION_VALIDATION_ERRORS.COLLECTION_NOT_FOUND,
-      );
-    }
-
-    return collection;
+  public async findOneWithChildRelations(id: string): Promise<Collection> {
+    return this.findOneWithRelations(id, ['wishes']);
   }
 
   public async findOneWithRelations(
-    id: number,
+    id: string,
     relations: string[] = [],
   ): Promise<Collection> {
     const collection = this.collectionsRepository.findOne({
@@ -114,7 +103,7 @@ export class CollectionService {
   }
 
   public async update(
-    id: number,
+    id: string,
     updateCollectionDto: UpdateCollectionDto,
   ): Promise<Collection> {
     await this.collectionsRepository.update(id, updateCollectionDto);
@@ -131,7 +120,7 @@ export class CollectionService {
     return updatedCollection;
   }
 
-  public async remove(userId: string, collectionId: number): Promise<void> {
+  public async remove(userId: string, collectionId: string): Promise<void> {
     const collection = await this.collectionsRepository.findOne({
       where: { id: collectionId },
       relations: ['user'],

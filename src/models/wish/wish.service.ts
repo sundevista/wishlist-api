@@ -20,7 +20,7 @@ export class WishService {
 
   public async create(
     userId: string,
-    collectionId: number,
+    collectionId: string,
     file: Express.Multer.File,
     createWishDto: CreateWishDto,
   ) {
@@ -42,7 +42,7 @@ export class WishService {
     return newWish;
   }
 
-  public async findOne(id: number) {
+  public async findOne(id: string) {
     const wish = await this.wishesRepository.findOneBy({ id });
 
     if (!wish)
@@ -51,7 +51,7 @@ export class WishService {
     return wish;
   }
 
-  public async findCollectionsWishes(collectionId: number): Promise<Wish[]> {
+  public async findCollectionsWishes(collectionId: string): Promise<Wish[]> {
     const collection = await this.collectionsService.findOneWithRelations(
       collectionId,
       ['wishes'],
@@ -61,7 +61,7 @@ export class WishService {
 
   public async update(
     userId: string,
-    wishId: number,
+    wishId: string,
     updateWishDto: UpdateWishDto,
   ) {
     const wish = await this.wishesRepository.findOne({
@@ -81,7 +81,7 @@ export class WishService {
 
   public async addImage(
     userId: string,
-    wishId: number,
+    wishId: string,
     imageBuffer: Buffer,
     filename: string,
   ) {
@@ -95,7 +95,7 @@ export class WishService {
     return image;
   }
 
-  public async deleteImage(userId: string, wishId: number) {
+  public async deleteImage(userId: string, wishId: string) {
     const wish = await this.wishesRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],
@@ -112,7 +112,7 @@ export class WishService {
     }
   }
 
-  public async remove(userId: string, wishId: number) {
+  public async remove(userId: string, wishId: string) {
     const wish = await this.wishesRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],

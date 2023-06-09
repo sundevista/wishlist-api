@@ -48,7 +48,7 @@ export class CollectionController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   public async findOne(@Param('id') id: string): Promise<Collection> {
-    return this.collectionsService.findOneWithChildRelations(+id);
+    return this.collectionsService.findOneWithChildRelations(id);
   }
 
   @ApiOperation({ summary: SWAGGER_COLLECTION_SUMMARY.FETCH_PERSONAL })
@@ -80,7 +80,7 @@ export class CollectionController {
     @Param('id') id: string,
     @Body() updateCollectionDto: UpdateCollectionDto,
   ): Promise<Collection> {
-    return this.collectionsService.update(+id, updateCollectionDto);
+    return this.collectionsService.update(id, updateCollectionDto);
   }
 
   @ApiOperation({ summary: SWAGGER_COLLECTION_SUMMARY.REMOVE })
@@ -91,6 +91,6 @@ export class CollectionController {
     @UserData('userId') userId: string,
     @Param('id') id: string,
   ) {
-    return this.collectionsService.remove(userId, +id);
+    return this.collectionsService.remove(userId, id);
   }
 }

@@ -12,8 +12,8 @@ import PublicFile from '../../file/entities/publicFile.entity';
 
 @Entity()
 class Wish {
-  @PrimaryGeneratedColumn()
-  public id: number;
+  @PrimaryGeneratedColumn('uuid')
+  public id: string;
 
   @Column({ type: 'varchar', nullable: false })
   public name: string;
