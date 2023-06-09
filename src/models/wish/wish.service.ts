@@ -51,6 +51,14 @@ export class WishService {
     return wish;
   }
 
+  public async findCollectionsWishes(collectionId: number): Promise<Wish[]> {
+    const collection = await this.collectionsService.findOneWithRelations(
+      collectionId,
+      ['wishes'],
+    );
+    return collection.wishes;
+  }
+
   public async update(
     userId: string,
     wishId: number,

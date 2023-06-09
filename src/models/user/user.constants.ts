@@ -7,6 +7,7 @@ export const USER_VALIDATION_REGEXPS = {
 
 export const USER_VALIDATION_ERRORS = {
   USER_NOT_FOUND: 'User not found',
+  USED_ALREADY_EXISTS: 'This user already exists',
 };
 
 export const USER_VISIBILITY_LEVELS = {

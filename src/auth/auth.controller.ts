@@ -1,4 +1,11 @@
-import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  Post,
+  UseFilters,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -6,6 +13,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { TypeOrmValidationErrorFilter } from '../utils/exceptions/type-orm-validation-error.filter';
 
 import { AuthService } from './auth.service';
 import { SWAGGER_AUTH_SUMMARY } from './auth.constants';
@@ -25,6 +33,7 @@ export class AuthController {
   @ApiCreatedResponse({ type: UserWithTokensDto })
   @ApiBody({ type: CreateUserDto })
   @ApiBearerAuth('JWT')
+  @UseFilters(TypeOrmValidationErrorFilter)
   @Post('registration')
   public async registration(
     @Body() createUserDto: CreateUserDto,

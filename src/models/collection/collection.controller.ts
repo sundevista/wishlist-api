@@ -51,6 +51,26 @@ export class CollectionController {
     return this.collectionsService.findOneWithChildRelations(+id);
   }
 
+  @ApiOperation({ summary: SWAGGER_COLLECTION_SUMMARY.FETCH_PERSONAL })
+  @ApiCreatedResponse({ type: Array<Collection> })
+  @ApiBearerAuth('JWT')
+  @UseGuards(JwtAuthGuard)
+  @Get('user/fetchPersonal')
+  public async findUsersCollections(
+    @UserData('userId') userId: string,
+  ): Promise<Collection[]> {
+    return this.collectionsService.getAllUsersCollections(userId);
+  }
+
+  @ApiOperation({ summary: SWAGGER_COLLECTION_SUMMARY.FETCH_GENERAL })
+  @ApiCreatedResponse({ type: Array<Collection> })
+  @Get('user/fetchOthers/:username')
+  public async findOthersCollection(
+    @Param('username') username: string,
+  ): Promise<Collection[]> {
+    return this.collectionsService.getPublicUsersCollections(username);
+  }
+
   @ApiOperation({ summary: SWAGGER_COLLECTION_SUMMARY.UPDATE })
   @ApiCreatedResponse({ type: Collection })
   @ApiBearerAuth('JWT')

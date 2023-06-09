@@ -72,7 +72,6 @@ export class User {
 
   @Expose({ groups: [USER_VISIBILITY_LEVELS.FETCH_ONE] })
   @OneToMany(() => Collection, (collection) => collection.user, {
-    eager: true,
     cascade: ['insert'],
   })
   public collections: Collection[];

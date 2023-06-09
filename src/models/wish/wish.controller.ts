@@ -64,6 +64,15 @@ export class WishController {
     return this.wishesService.findOne(+id);
   }
 
+  @ApiOperation({ summary: SWAGGER_WISH_SUMMARY.COLLECTIONS_WISHES })
+  @ApiCreatedResponse({ type: Array<Wish> })
+  @Get('fromCollection/:collectionId')
+  public async findCollectionsWishes(
+    @Param('collectionId') collectionId: string,
+  ): Promise<Wish[]> {
+    return this.wishesService.findCollectionsWishes(+collectionId);
+  }
+
   @ApiOperation({ summary: SWAGGER_WISH_SUMMARY.UPDATE })
   @ApiCreatedResponse({ type: Wish })
   @ApiBody({ type: UpdateWishDto })

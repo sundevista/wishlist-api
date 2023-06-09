@@ -88,6 +88,24 @@ export class CollectionService {
     return collection;
   }
 
+  public async getAllUsersCollections(userId: string): Promise<Collection[]> {
+    const user = await this.usersService.findOneWithRelations(userId, [
+      'collections',
+    ]);
+    return user.collections;
+  }
+
+  public async getPublicUsersCollections(
+    username: string,
+  ): Promise<Collection[]> {
+    const user = await this.usersService.findOneByUsername(username, [
+      'collections',
+    ]);
+    return user.collections.filter(
+      (collection: Collection) => collection.public,
+    );
+  }
+
   public checkCollectionAccess(collection: Collection, userId: string): void {
     if (userId !== collection.user.id)
       throw new BadRequestException(

@@ -28,7 +28,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ValidationErrorFilter } from '../../utils/exceptions/validation-error.filter';
+import { TypeOrmValidationErrorFilter } from '../../utils/exceptions/type-orm-validation-error.filter';
 import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 import { UserData } from './decorator/user.decorator';
 import {
@@ -71,7 +71,7 @@ export class UserController {
   })
   @Get('profile/me')
   public async fetchProfile(@UserData('userId') userId: string): Promise<User> {
-    return this.userService.findOneById(userId);
+    return this.userService.findOneWithRelations(userId);
   }
 
   @ApiOperation({ summary: SWAGGER_USER_SUMMARY.UPDATE })
@@ -79,7 +79,7 @@ export class UserController {
   @ApiBody({ type: UpdateUserDto })
   @ApiBearerAuth('JWT')
   @UseGuards(JwtAuthGuard)
-  @UseFilters(new ValidationErrorFilter())
+  @UseFilters(new TypeOrmValidationErrorFilter())
   @Patch()
   public async update(
     @UserData('userId') userId: string,

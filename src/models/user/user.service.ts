@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { AuthCacheService } from '../../auth/auth-cache.service';
+import PublicFile from '../file/entities/publicFile.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -18,7 +19,7 @@ export class UserService {
     private authCacheService: AuthCacheService,
   ) {}
 
-  public async saveEntity(user: User) {
+  public async saveEntity(user: User): Promise<void> {
     await this.userRepository.save(user);
   }
 
@@ -33,7 +34,7 @@ export class UserService {
     return bcrypt.compare(password, hashedPassword);
   }
 
-  public async createUser(createUserDto: CreateUserDto) {
+  public async createUser(createUserDto: CreateUserDto): Promise<User> {
     const hashedPassword = await this.hashedPassword(createUserDto.password);
 
     const newUser = await this.userRepository.create({
@@ -45,19 +46,18 @@ export class UserService {
     return newUser;
   }
 
-  public async findAll() {
+  public async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  public async findOneByUsername(username: string, showPrivateInfo = false) {
-    const user = await this.userRepository.findOneBy({ username });
-
-    // TODO: It should be done more properly
-    if (!showPrivateInfo && user?.collections) {
-      user.collections = user.collections.filter(
-        (collection) => collection.public,
-      );
-    }
+  public async findOneByUsername(
+    username: string,
+    relations: string[] = [],
+  ): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { username },
+      relations: relations,
+    });
 
     if (!user)
       throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
@@ -65,7 +65,7 @@ export class UserService {
     return user;
   }
 
-  public async findOneByEmail(email: string) {
+  public async findOneByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ email });
 
     if (!user)
@@ -74,16 +74,10 @@ export class UserService {
     return user;
   }
 
-  public async findOneById(userId: string) {
-    const user = await this.userRepository.findOneBy({ id: userId });
-
-    if (!user)
-      throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
-
-    return user;
-  }
-
-  public async findOneWithRelations(userId: string, relations: string[] = []) {
+  public async findOneWithRelations(
+    userId: string,
+    relations: string[] = [],
+  ): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: relations,
@@ -95,7 +89,10 @@ export class UserService {
     return user;
   }
 
-  public async update(userId: string, updateUserDto: UpdateUserDto) {
+  public async update(
+    userId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
     await this.userRepository.update(userId, updateUserDto);
     const updatedUser = await this.userRepository.findOneBy({ id: userId });
 
@@ -110,7 +107,7 @@ export class UserService {
     userId: string,
     imageBuffer: Buffer,
     filename: string,
-  ) {
+  ): Promise<PublicFile> {
     // Delete old avatar if exists
     await this.deleteAvatar(userId);
 
@@ -122,8 +119,8 @@ export class UserService {
     return avatar;
   }
 
-  public async deleteAvatar(userId: string) {
-    const user = await this.findOneById(userId);
+  public async deleteAvatar(userId: string): Promise<void> {
+    const user = await this.findOneWithRelations(userId);
     const fileId = user.avatar?.id;
     if (fileId) {
       await this.userRepository.update(userId, {
@@ -133,7 +130,7 @@ export class UserService {
     }
   }
 
-  public async removeById(userId: string) {
+  public async removeById(userId: string): Promise<void> {
     await this.deleteAvatar(userId);
     const deleteResponse = await this.userRepository.delete(userId);
     if (!deleteResponse.affected) {
