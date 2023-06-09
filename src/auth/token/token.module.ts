@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -7,6 +7,7 @@ import { TokenService } from './token.service';
 import { TokenController } from './token.controller';
 import { AuthCacheService } from '../auth-cache.service';
 
+@Global()
 @Module({
   imports: [JwtModule.register({}), TypeOrmModule.forFeature([RefreshToken])],
   controllers: [TokenController],

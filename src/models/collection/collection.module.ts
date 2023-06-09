@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { FilesModule } from '../file/files.module';
+
 import { CollectionService } from './collection.service';
 import { CollectionController } from './collection.controller';
 import Collection from './entities/collection.entity';
@@ -13,8 +13,8 @@ import { TokenModule } from '../../auth/token/token.module';
   imports: [
     TypeOrmModule.forFeature([Collection]),
     UserModule,
-    TokenModule,
     FilesModule,
+    TokenModule,
   ],
   controllers: [CollectionController],
   providers: [CollectionService, AuthCacheService],
