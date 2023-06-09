@@ -13,7 +13,7 @@ export class AuthCacheService {
     private readonly configService: ConfigService,
   ) {
     this.tokenExpirationTime = this.configService.get(
-      'jwt.refreshTokenExpirationTime',
+      'jwt.accessTokenExpirationTime',
     );
   }
 

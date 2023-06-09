@@ -26,6 +26,25 @@ export class TokenService {
     this.configureJwtSignOptions();
   }
 
+  private configureJwtSignOptions() {
+    const {
+      accessTokenSecret,
+      accessTokenExpirationTime,
+      refreshTokenSecret,
+      refreshTokenExpirationTime,
+    } = this.configService.get('jwt');
+
+    this[JwtSignOptionEnum.AccessToken] = {
+      secret: accessTokenSecret,
+      expiresIn: accessTokenExpirationTime,
+    };
+
+    this[JwtSignOptionEnum.RefreshToken] = {
+      secret: refreshTokenSecret,
+      expiresIn: refreshTokenExpirationTime,
+    };
+  }
+
   public async deleteRefreshToken(refreshToken: string): Promise<void> {
     await this.tokenRepository.delete({ refreshToken });
   }
@@ -47,25 +66,6 @@ export class TokenService {
     refreshToken: string,
   ): Promise<void> {
     await this.tokenRepository.update({ id }, { refreshToken });
-  }
-
-  private configureJwtSignOptions() {
-    const {
-      accessTokenSecret,
-      accessTokenExpirationTime,
-      refreshTokenSecret,
-      refreshTokenExpirationTime,
-    } = this.configService.get('jwt');
-
-    this[JwtSignOptionEnum.AccessToken] = {
-      secret: accessTokenSecret,
-      expiresIn: accessTokenExpirationTime,
-    };
-
-    this[JwtSignOptionEnum.RefreshToken] = {
-      secret: refreshTokenSecret,
-      expiresIn: refreshTokenExpirationTime,
-    };
   }
 
   public composeToken(
