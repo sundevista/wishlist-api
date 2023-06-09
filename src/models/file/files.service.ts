@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { S3 } from 'aws-sdk';
@@ -6,6 +6,11 @@ import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 
 import PublicFile from './entities/publicFile.entity';
+import {
+  ALLOWED_EXTENSIONS,
+  FILE_SIZE_LIMITATION,
+  FILE_VALIDATION_ERRORS,
+} from './files.constants';
 
 @Injectable()
 export class FilesService {
@@ -15,10 +20,20 @@ export class FilesService {
     private readonly configService: ConfigService,
   ) {}
 
+  public checkFileProperties(dataBuffer: Buffer, filename: string): void {
+    if (dataBuffer.length > FILE_SIZE_LIMITATION)
+      throw new BadRequestException(FILE_VALIDATION_ERRORS.FILES_TOO_LARGE);
+    if (!ALLOWED_EXTENSIONS.includes(filename.split('.').slice(-1)[0])) {
+      throw new BadRequestException(FILE_VALIDATION_ERRORS.WRONG_EXTENSION);
+    }
+  }
+
   public async uploadPublicFile(
     dataBuffer: Buffer,
     filename: string,
   ): Promise<PublicFile> {
+    this.checkFileProperties(dataBuffer, filename);
+
     const s3 = new S3();
     const uploadResult = await s3
       .upload({
