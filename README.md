@@ -9,13 +9,13 @@
 
 ### Start (development)
 
-1. `docker-compose up -d postgres`
-2. `docker-compose up -d pgadmin` (optional)
+1. `docker-compose up -d postgres redis`
+2. `docker-compose up -d redis-commander` (optional)
 3. `npm run start:dev`
 
 ### Build (production)
 
-1. `docker-compose up -d postgres` (to run database)
+1. `docker-compose up -d postgres redis` (to run database and cache)
 2. `docker-compose up -d` (to run everything else)
 
 
@@ -25,6 +25,8 @@ You can use `.env.example` to create your `.env` file.
 
 
 ## Migrations
+
+Migrations don't run automatically on the application start.
 
 - Generate migration: `npm run migration:generate --name=<name>`
 - Run migrations: `npm run migration:run`
