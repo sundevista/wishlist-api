@@ -7,6 +7,10 @@ import { REDIS_CLIENT } from './redis.constants';
 export class RedisService {
   constructor(@Inject(REDIS_CLIENT) private readonly redisClient: Redis) {}
 
+  public async wipeKey(hash: string): Promise<void> {
+    await this.redisClient.del(hash);
+  }
+
   public multi(): ChainableCommander {
     return this.redisClient.multi();
   }

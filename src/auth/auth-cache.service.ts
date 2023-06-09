@@ -17,6 +17,10 @@ export class AuthCacheService {
     );
   }
 
+  public async wipeAccessTokens(userId: string): Promise<void> {
+    await this.redisService.wipeKey(`${REDIS_CONSTANTS.USER_TOKEN}:${userId}`);
+  }
+
   public async saveAccessTokenToRedis(
     userId: string,
     accessToken: string,

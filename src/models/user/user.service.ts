@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { AuthCacheService } from '../../auth/auth-cache.service';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,6 +15,7 @@ export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     private filesService: FilesService,
+    private authCacheService: AuthCacheService,
   ) {}
 
   async saveEntity(user: User) {
@@ -133,6 +135,7 @@ export class UserService {
     if (!deleteResponse.affected) {
       throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
     }
+    await this.authCacheService.wipeAccessTokens(userId);
     await this.filesService.cleanupOrphanedFiles();
   }
 }
