@@ -9,7 +9,7 @@ import { USER_VALIDATION_REGEXPS } from '../user.constants';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
-  @ApiProperty()
+  @ApiProperty({ default: 'local_user' })
   @IsDefined({ message: '$property should be defined' })
   @MinLength(5, {
     message: '$property should be longer than $constraint1 characters',
@@ -23,7 +23,7 @@ export class CreateUserDto {
   })
   username: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'local_user@gmail.com' })
   @IsDefined({ message: '$property should be defined' })
   @MaxLength(70, {
     message: '$property should be less than $constraint1 characters',
@@ -31,7 +31,7 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'Local User' })
   @IsDefined({ message: '$property should be defined' })
   @MinLength(4, {
     message: '$property should be longer than $constraint1 characters',
@@ -41,7 +41,7 @@ export class CreateUserDto {
   })
   full_name: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'secret_password' })
   @IsDefined({ message: '$property should be defined' })
   @MinLength(8, {
     message: '$property should be longer than $constraint1 characters',
