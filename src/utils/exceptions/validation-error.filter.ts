@@ -27,7 +27,7 @@ const formatExceptionMessageForUser = (exception: TypeORMError) => {
 
 @Catch(TypeORMError)
 export class ValidationErrorFilter implements ExceptionFilter {
-  catch(exception: TypeORMError, host: ArgumentsHost) {
+  public catch(exception: TypeORMError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = 400;

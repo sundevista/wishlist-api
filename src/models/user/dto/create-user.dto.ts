@@ -21,7 +21,7 @@ export class CreateUserDto {
     message:
       '$property should include only english lowercase characters, numbers and underscore',
   })
-  username: string;
+  public username: string;
 
   @ApiProperty({ default: 'local_user@gmail.com' })
   @IsDefined({ message: '$property should be defined' })
@@ -29,7 +29,7 @@ export class CreateUserDto {
     message: '$property should be less than $constraint1 characters',
   })
   @IsEmail()
-  email: string;
+  public email: string;
 
   @ApiProperty({ default: 'Local User' })
   @IsDefined({ message: '$property should be defined' })
@@ -39,7 +39,7 @@ export class CreateUserDto {
   @MaxLength(40, {
     message: '$property should be less than $constraint1 characters',
   })
-  full_name: string;
+  public full_name: string;
 
   @ApiProperty({ default: 'secret_password' })
   @IsDefined({ message: '$property should be defined' })
@@ -49,5 +49,5 @@ export class CreateUserDto {
   @MaxLength(32, {
     message: '$property should be less than $constraint1 characters',
   })
-  password: string;
+  public password: string;
 }

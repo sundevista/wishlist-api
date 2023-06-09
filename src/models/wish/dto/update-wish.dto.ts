@@ -4,5 +4,5 @@ import PublicFile from 'src/models/file/entities/publicFile.entity';
 import { CreateWishDto } from './create-wish.dto';
 
 export class UpdateWishDto extends PartialType(CreateWishDto) {
-  image?: PublicFile;
+  public image?: PublicFile;
 }

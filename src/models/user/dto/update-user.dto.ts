@@ -4,6 +4,6 @@ import PublicFile from 'src/models/file/entities/publicFile.entity';
 import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-  avatar?: PublicFile;
-  collections?: Collection[];
+  public avatar?: PublicFile;
+  public collections?: Collection[];
 }

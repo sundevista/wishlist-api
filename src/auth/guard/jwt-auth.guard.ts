@@ -17,7 +17,7 @@ export class JwtAuthGuard implements CanActivate {
     private readonly authCacheService: AuthCacheService,
   ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers?.authorization;
 

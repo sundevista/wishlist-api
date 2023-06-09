@@ -24,8 +24,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { User } from './entities/user.entity';
 
+import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationErrorFilter } from '../../utils/exceptions/validation-error.filter';

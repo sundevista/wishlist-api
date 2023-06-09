@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -11,6 +7,7 @@ import { FilesService } from '../file/files.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import Wish from './entities/wish.entity';
+import { WISH_VALIDATION_ERRORS } from './wish.constants';
 
 @Injectable()
 export class WishService {
@@ -21,7 +18,7 @@ export class WishService {
     private filesService: FilesService,
   ) {}
 
-  async create(
+  public async create(
     userId: string,
     collectionId: number,
     file: Express.Multer.File,
@@ -32,11 +29,7 @@ export class WishService {
       ['user', 'wishes'],
     );
 
-    if (!collection)
-      throw new NotFoundException('Collection with given id was not found');
-
-    if (userId !== collection.user.id)
-      throw new BadRequestException('You have no access to this collection');
+    this.collectionsService.checkCollectionAccess(collection, userId);
 
     const newWish = await this.wishesRepository.create(createWishDto);
 
@@ -49,31 +42,36 @@ export class WishService {
     return newWish;
   }
 
-  async findOne(id: number) {
+  public async findOne(id: number) {
     const wish = await this.wishesRepository.findOneBy({ id });
 
-    if (!wish) throw new NotFoundException('Wish with given id was not found');
+    if (!wish)
+      throw new NotFoundException(WISH_VALIDATION_ERRORS.WISH_NOT_FOUND);
 
     return wish;
   }
 
-  async update(userId: string, wishId: number, updateWishDto: UpdateWishDto) {
+  public async update(
+    userId: string,
+    wishId: number,
+    updateWishDto: UpdateWishDto,
+  ) {
     const wish = await this.wishesRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],
     });
 
-    if (userId !== wish.collection.user.id)
-      throw new BadRequestException('You have no access to this collection');
+    this.collectionsService.checkCollectionAccess(wish.collection, userId);
 
-    if (!wish) throw new NotFoundException('Wish with given id was not found');
+    if (!wish)
+      throw new NotFoundException(WISH_VALIDATION_ERRORS.WISH_NOT_FOUND);
 
     await this.wishesRepository.update(wishId, updateWishDto);
 
     return wish;
   }
 
-  async addImage(
+  public async addImage(
     userId: string,
     wishId: number,
     imageBuffer: Buffer,
@@ -89,14 +87,13 @@ export class WishService {
     return image;
   }
 
-  async deleteImage(userId: string, wishId: number) {
+  public async deleteImage(userId: string, wishId: number) {
     const wish = await this.wishesRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],
     });
 
-    if (wish.collection.user.id !== userId)
-      throw new BadRequestException('You have no access to this wish');
+    this.collectionsService.checkCollectionAccess(wish.collection, userId);
 
     const fileId = wish.image?.id;
     if (fileId) {
@@ -107,20 +104,19 @@ export class WishService {
     }
   }
 
-  async remove(userId: string, wishId: number) {
+  public async remove(userId: string, wishId: number) {
     const wish = await this.wishesRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],
     });
 
-    if (wish.collection.user.id !== userId)
-      throw new BadRequestException('You have no access to this wish');
+    this.collectionsService.checkCollectionAccess(wish.collection, userId);
 
     await this.deleteImage(userId, wishId);
 
     const deleteResponse = await this.wishesRepository.delete(wishId);
     if (!deleteResponse.affected) {
-      throw new NotFoundException('Wish with given id was not found');
+      throw new NotFoundException(WISH_VALIDATION_ERRORS.WISH_NOT_FOUND);
     }
   }
 }

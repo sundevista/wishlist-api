@@ -5,9 +5,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { FilesService } from '../file/files.service';
 
+import { FilesService } from '../file/files.service';
 import { UserService } from '../user/user.service';
+import { COLLECTION_VALIDATION_ERRORS } from './collection.constants';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 import Collection from './entities/collection.entity';
@@ -21,12 +22,14 @@ export class CollectionService {
     private usersService: UserService,
   ) {}
 
-  async saveEntity(collection: Collection) {
+  public async saveEntity(collection: Collection): Promise<void> {
     await this.collectionsRepository.save(collection);
   }
 
-  //TODO: use cascade actions
-  async create(userId: string, createCollectionDto: CreateCollectionDto) {
+  public async create(
+    userId: string,
+    createCollectionDto: CreateCollectionDto,
+  ): Promise<Collection> {
     const newCollection =
       this.collectionsRepository.create(createCollectionDto);
 
@@ -40,69 +43,94 @@ export class CollectionService {
     return newCollection;
   }
 
-  async findOne(id: number) {
+  public async findOne(id: number): Promise<Collection> {
     const collection = this.collectionsRepository.findOneBy({ id });
 
     if (!collection) {
-      throw new NotFoundException('Collection with given id was not found');
+      throw new NotFoundException(
+        COLLECTION_VALIDATION_ERRORS.COLLECTION_NOT_FOUND,
+      );
     }
 
     return collection;
   }
 
-  async findOneWithChildRelations(id: number) {
+  public async findOneWithChildRelations(id: number): Promise<Collection> {
     const collection = this.collectionsRepository.findOne({
       where: { id },
       relations: ['wishes'],
     });
 
     if (!collection) {
-      throw new NotFoundException('Collection with given id was not found');
+      throw new NotFoundException(
+        COLLECTION_VALIDATION_ERRORS.COLLECTION_NOT_FOUND,
+      );
     }
 
     return collection;
   }
 
-  async findOneWithRelations(id: number, relations: string[] = []) {
+  public async findOneWithRelations(
+    id: number,
+    relations: string[] = [],
+  ): Promise<Collection> {
     const collection = this.collectionsRepository.findOne({
       where: { id },
       relations: relations,
     });
 
     if (!collection) {
-      throw new NotFoundException('Collection with given id was not found');
+      throw new NotFoundException(
+        COLLECTION_VALIDATION_ERRORS.COLLECTION_NOT_FOUND,
+      );
     }
 
     return collection;
   }
 
-  async update(id: number, updateCollectionDto: UpdateCollectionDto) {
+  public checkCollectionAccess(collection: Collection, userId: string): void {
+    if (userId !== collection.user.id)
+      throw new BadRequestException(
+        COLLECTION_VALIDATION_ERRORS.ACCESS_NOT_PERMITTED,
+      );
+  }
+
+  public async update(
+    id: number,
+    updateCollectionDto: UpdateCollectionDto,
+  ): Promise<Collection> {
     await this.collectionsRepository.update(id, updateCollectionDto);
     const updatedCollection = await this.collectionsRepository.findOneBy({
       id,
     });
 
     if (!updatedCollection) {
-      throw new NotFoundException('Collection with given id was not found');
+      throw new NotFoundException(
+        COLLECTION_VALIDATION_ERRORS.COLLECTION_NOT_FOUND,
+      );
     }
 
     return updatedCollection;
   }
 
-  async remove(userId: string, collectionId: number) {
+  public async remove(userId: string, collectionId: number): Promise<void> {
     const collection = await this.collectionsRepository.findOne({
       where: { id: collectionId },
       relations: ['user'],
     });
 
     if (collection.user.id !== userId)
-      throw new BadRequestException('You have no access to this collection');
+      throw new BadRequestException(
+        COLLECTION_VALIDATION_ERRORS.ACCESS_NOT_PERMITTED,
+      );
 
     const deleteResponse = await this.collectionsRepository.delete(
       collectionId,
     );
     if (!deleteResponse.affected) {
-      throw new NotFoundException('Collection with given id was not found');
+      throw new NotFoundException(
+        COLLECTION_VALIDATION_ERRORS.COLLECTION_NOT_FOUND,
+      );
     }
     await this.filesService.cleanupOrphanedFiles();
   }

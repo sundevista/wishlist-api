@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { AuthCacheService } from '../../auth/auth-cache.service';
 
+import { AuthCacheService } from '../../auth/auth-cache.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -18,7 +18,7 @@ export class UserService {
     private authCacheService: AuthCacheService,
   ) {}
 
-  async saveEntity(user: User) {
+  public async saveEntity(user: User) {
     await this.userRepository.save(user);
   }
 
@@ -33,7 +33,7 @@ export class UserService {
     return bcrypt.compare(password, hashedPassword);
   }
 
-  async createUser(createUserDto: CreateUserDto) {
+  public async createUser(createUserDto: CreateUserDto) {
     const hashedPassword = await this.hashedPassword(createUserDto.password);
 
     const newUser = await this.userRepository.create({
@@ -45,11 +45,11 @@ export class UserService {
     return newUser;
   }
 
-  async findAll() {
+  public async findAll() {
     return this.userRepository.find();
   }
 
-  async findOneByUsername(username: string, showPrivateInfo = false) {
+  public async findOneByUsername(username: string, showPrivateInfo = false) {
     const user = await this.userRepository.findOneBy({ username });
 
     // TODO: It should be done more properly
@@ -65,7 +65,7 @@ export class UserService {
     return user;
   }
 
-  async findOneByEmail(email: string) {
+  public async findOneByEmail(email: string) {
     const user = await this.userRepository.findOneBy({ email });
 
     if (!user)
@@ -74,7 +74,7 @@ export class UserService {
     return user;
   }
 
-  async findOneById(userId: string) {
+  public async findOneById(userId: string) {
     const user = await this.userRepository.findOneBy({ id: userId });
 
     if (!user)
@@ -83,7 +83,7 @@ export class UserService {
     return user;
   }
 
-  async findOneWithRelations(userId: string, relations: string[] = []) {
+  public async findOneWithRelations(userId: string, relations: string[] = []) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: relations,
@@ -95,7 +95,7 @@ export class UserService {
     return user;
   }
 
-  async update(userId: string, updateUserDto: UpdateUserDto) {
+  public async update(userId: string, updateUserDto: UpdateUserDto) {
     await this.userRepository.update(userId, updateUserDto);
     const updatedUser = await this.userRepository.findOneBy({ id: userId });
 
@@ -106,7 +106,11 @@ export class UserService {
     return updatedUser;
   }
 
-  async addAvatar(userId: string, imageBuffer: Buffer, filename: string) {
+  public async addAvatar(
+    userId: string,
+    imageBuffer: Buffer,
+    filename: string,
+  ) {
     // Delete old avatar if exists
     await this.deleteAvatar(userId);
 
@@ -118,7 +122,7 @@ export class UserService {
     return avatar;
   }
 
-  async deleteAvatar(userId: string) {
+  public async deleteAvatar(userId: string) {
     const user = await this.findOneById(userId);
     const fileId = user.avatar?.id;
     if (fileId) {
@@ -129,7 +133,7 @@ export class UserService {
     }
   }
 
-  async removeById(userId: string) {
+  public async removeById(userId: string) {
     await this.deleteAvatar(userId);
     const deleteResponse = await this.userRepository.delete(userId);
     if (!deleteResponse.affected) {

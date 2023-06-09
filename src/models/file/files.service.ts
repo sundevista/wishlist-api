@@ -51,7 +51,7 @@ export class FilesService {
   }
 
   // Used to clean files those are not referenced by any wish or user
-  async cleanupOrphanedFiles(): Promise<void> {
+  public async cleanupOrphanedFiles(): Promise<void> {
     const orphans: PublicFile[] = await this.publicFileRepository.query(
       'SELECT public_file.* FROM public_file ' +
         'LEFT JOIN wish w on public_file.id = w."imageId" ' +
