@@ -120,9 +120,14 @@ export class TokenService {
   ): Promise<jwtTokensInterface> {
     const userId = await this.findAndVerifyToken(refreshToken);
     const tokens = await this.composeTokens(userId);
+    const oldRefreshTokenEntity = await this.findToken(refreshToken);
+
     await Promise.all([
       this.authCacheService.saveAccessTokenToRedis(userId, tokens.accessToken),
-      this.updateRefreshTokenEntity(userId, tokens.refreshToken),
+      this.updateRefreshTokenEntity(
+        oldRefreshTokenEntity.id,
+        tokens.refreshToken,
+      ),
     ]);
 
     return tokens;

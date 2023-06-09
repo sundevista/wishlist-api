@@ -29,9 +29,6 @@ export class RefreshToken {
   @UpdateDateColumn({ type: 'timestamptz', select: false })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.token, {
-    onDelete: 'CASCADE',
-    orphanedRowAction: 'delete',
-  })
+  @ManyToOne(() => User, (user) => user.token)
   user: User;
 }

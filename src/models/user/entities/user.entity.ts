@@ -58,7 +58,7 @@ export class User {
   public collections: Collection[];
 
   @OneToMany(() => RefreshToken, (token) => token.userId, {
-    cascade: ['remove'],
+    onDelete: 'CASCADE',
   })
   token: RefreshToken[];
 }

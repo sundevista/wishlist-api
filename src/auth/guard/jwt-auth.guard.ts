@@ -46,8 +46,8 @@ export class JwtAuthGuard implements CanActivate {
   private async removeAccessTokenFromRedis(accessToken: string): Promise<void> {
     const tokenPayload = this.tokenService.decodeToken(accessToken);
     await this.authCacheService.removeAccessTokenFromRedis(
-      accessToken,
       tokenPayload.userId,
+      accessToken,
     );
   }
 }

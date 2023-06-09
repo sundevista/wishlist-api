@@ -54,45 +54,4 @@ export class AuthCacheService {
     );
     return userAccessTokens.some((token: string) => token === accessToken);
   }
-
-  public async saveCodeToRedis(
-    mail: string,
-    randomNumber: string,
-  ): Promise<void> {
-    const multi = this.redisService.multi();
-
-    await this.redisService.sAdd(
-      `${REDIS_CONSTANTS.USER_CODE}:${mail}`,
-      randomNumber,
-      multi,
-    );
-    await this.redisService.expire(
-      `${REDIS_CONSTANTS.USER_CODE}:${mail}`,
-      REDIS_CONSTANTS.CODE_EXPIRATION_TIME,
-      multi,
-    );
-
-    await this.redisService.exec(multi);
-  }
-
-  public async isCodeExist(
-    mail: string,
-    randomNumber: string,
-  ): Promise<boolean> {
-    const userCode = await this.redisService.sMembers(
-      `${REDIS_CONSTANTS.USER_CODE}:${mail}`,
-    );
-
-    return userCode.some((code: string) => code === randomNumber);
-  }
-
-  public async removeCodeFromRedis(
-    mail: string,
-    randomCode: string,
-  ): Promise<void> {
-    await this.redisService.sRem(
-      `${REDIS_CONSTANTS.USER_CODE}:${mail}`,
-      randomCode,
-    );
-  }
 }

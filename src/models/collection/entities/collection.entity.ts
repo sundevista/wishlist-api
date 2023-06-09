@@ -29,7 +29,10 @@ class Collection {
   public wishes: Wish[];
 
   @JoinColumn()
-  @ManyToOne(() => User, (user) => user.collections)
+  @ManyToOne(() => User, (user) => user.collections, {
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
   public user: User;
 }
 
