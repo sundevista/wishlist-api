@@ -10,10 +10,10 @@ import {
   ALLOWED_EXTENSIONS,
   FILE_SIZE_LIMITATION,
   FILE_VALIDATION_ERRORS,
-} from './files.constants';
+} from './file.constants';
 
 @Injectable()
-export class FilesService {
+export class FileService {
   constructor(
     @InjectRepository(PublicFile)
     private publicFileRepository: Repository<PublicFile>,

@@ -3,11 +3,11 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import PublicFile from './entities/publicFile.entity';
-import { FilesService } from './files.service';
+import { FileService } from './file.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PublicFile]), ConfigModule.forRoot()],
-  providers: [FilesService],
-  exports: [FilesService],
+  providers: [FileService],
+  exports: [FileService],
 })
-export class FilesModule {}
+export class FileModule {}

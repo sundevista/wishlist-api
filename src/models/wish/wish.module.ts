@@ -6,7 +6,7 @@ import { WishController } from './wish.controller';
 import Wish from './entities/wish.entity';
 import { UserModule } from '../user/user.module';
 import { CollectionModule } from '../collection/collection.module';
-import { FilesModule } from '../file/files.module';
+import { FileModule } from '../file/file.module';
 import { AuthCacheService } from '../../auth/auth-cache.service';
 import { TokenModule } from '../../auth/token/token.module';
 
@@ -15,7 +15,7 @@ import { TokenModule } from '../../auth/token/token.module';
     TypeOrmModule.forFeature([Wish]),
     UserModule,
     CollectionModule,
-    FilesModule,
+    FileModule,
     TokenModule,
   ],
   controllers: [WishController],

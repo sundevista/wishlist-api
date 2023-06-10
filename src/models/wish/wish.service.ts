@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CollectionService } from '../collection/collection.service';
-import { FilesService } from '../file/files.service';
+import { FileService } from '../file/file.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
 import Wish from './entities/wish.entity';
@@ -13,9 +13,9 @@ import { WISH_VALIDATION_ERRORS } from './wish.constants';
 export class WishService {
   constructor(
     @InjectRepository(Wish)
-    private wishesRepository: Repository<Wish>,
-    private collectionsService: CollectionService,
-    private filesService: FilesService,
+    private wishRepository: Repository<Wish>,
+    private collectionService: CollectionService,
+    private fileService: FileService,
   ) {}
 
   public async create(
@@ -24,26 +24,26 @@ export class WishService {
     file: Express.Multer.File,
     createWishDto: CreateWishDto,
   ) {
-    const collection = await this.collectionsService.findOneWithRelations(
+    const collection = await this.collectionService.findOneWithRelations(
       collectionId,
       ['user', 'wishes'],
     );
 
-    this.collectionsService.checkCollectionAccess(collection, userId);
+    this.collectionService.checkCollectionAccess(collection, userId);
 
-    const newWish = await this.wishesRepository.create(createWishDto);
+    const newWish = await this.wishRepository.create(createWishDto);
 
     if (file)
       await this.addImage(userId, newWish.id, file.buffer, file.originalname);
 
     collection.wishes = [...collection.wishes, newWish];
-    await this.collectionsService.saveEntity(collection);
+    await this.collectionService.saveEntity(collection);
 
     return newWish;
   }
 
   public async findOne(id: string) {
-    const wish = await this.wishesRepository.findOneBy({ id });
+    const wish = await this.wishRepository.findOneBy({ id });
 
     if (!wish)
       throw new NotFoundException(WISH_VALIDATION_ERRORS.WISH_NOT_FOUND);
@@ -52,7 +52,7 @@ export class WishService {
   }
 
   public async findCollectionsWishes(collectionId: string): Promise<Wish[]> {
-    const collection = await this.collectionsService.findOneWithRelations(
+    const collection = await this.collectionService.findOneWithRelations(
       collectionId,
       ['wishes'],
     );
@@ -64,17 +64,17 @@ export class WishService {
     wishId: string,
     updateWishDto: UpdateWishDto,
   ) {
-    const wish = await this.wishesRepository.findOne({
+    const wish = await this.wishRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],
     });
 
-    this.collectionsService.checkCollectionAccess(wish.collection, userId);
+    this.collectionService.checkCollectionAccess(wish.collection, userId);
 
     if (!wish)
       throw new NotFoundException(WISH_VALIDATION_ERRORS.WISH_NOT_FOUND);
 
-    await this.wishesRepository.update(wishId, updateWishDto);
+    await this.wishRepository.update(wishId, updateWishDto);
 
     return wish;
   }
@@ -87,42 +87,42 @@ export class WishService {
   ) {
     await this.deleteImage(userId, wishId);
 
-    const image = await this.filesService.uploadPublicFile(
+    const image = await this.fileService.uploadPublicFile(
       imageBuffer,
       filename,
     );
-    await this.wishesRepository.update(wishId, { image });
+    await this.wishRepository.update(wishId, { image });
     return image;
   }
 
   public async deleteImage(userId: string, wishId: string) {
-    const wish = await this.wishesRepository.findOne({
+    const wish = await this.wishRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],
     });
 
-    this.collectionsService.checkCollectionAccess(wish.collection, userId);
+    this.collectionService.checkCollectionAccess(wish.collection, userId);
 
     const fileId = wish.image?.id;
     if (fileId) {
-      await this.wishesRepository.update(wishId, {
+      await this.wishRepository.update(wishId, {
         image: null,
       });
-      await this.filesService.deletePublicFile(fileId);
+      await this.fileService.deletePublicFile(fileId);
     }
   }
 
   public async remove(userId: string, wishId: string) {
-    const wish = await this.wishesRepository.findOne({
+    const wish = await this.wishRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],
     });
 
-    this.collectionsService.checkCollectionAccess(wish.collection, userId);
+    this.collectionService.checkCollectionAccess(wish.collection, userId);
 
     await this.deleteImage(userId, wishId);
 
-    const deleteResponse = await this.wishesRepository.delete(wishId);
+    const deleteResponse = await this.wishRepository.delete(wishId);
     if (!deleteResponse.affected) {
       throw new NotFoundException(WISH_VALIDATION_ERRORS.WISH_NOT_FOUND);
     }

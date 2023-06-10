@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { FilesModule } from '../file/files.module';
+import { FileModule } from '../file/file.module';
 
 import { CollectionService } from './collection.service';
 import { CollectionController } from './collection.controller';
@@ -13,7 +13,7 @@ import { TokenModule } from '../../auth/token/token.module';
   imports: [
     TypeOrmModule.forFeature([Collection]),
     UserModule,
-    FilesModule,
+    FileModule,
     TokenModule,
   ],
   controllers: [CollectionController],

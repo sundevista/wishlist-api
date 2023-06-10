@@ -8,14 +8,14 @@ import PublicFile from '../file/entities/publicFile.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { FilesService } from '../file/files.service';
+import { FileService } from '../file/file.service';
 import { PASSWORD_SALT_ROUNDS, USER_VALIDATION_ERRORS } from './user.constants';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    private filesService: FilesService,
+    private fileService: FileService,
     private authCacheService: AuthCacheService,
   ) {}
 
@@ -111,7 +111,7 @@ export class UserService {
     // Delete old avatar if exists
     await this.deleteAvatar(userId);
 
-    const avatar = await this.filesService.uploadPublicFile(
+    const avatar = await this.fileService.uploadPublicFile(
       imageBuffer,
       filename,
     );
@@ -126,7 +126,7 @@ export class UserService {
       await this.userRepository.update(userId, {
         avatar: null,
       });
-      await this.filesService.deletePublicFile(fileId);
+      await this.fileService.deletePublicFile(fileId);
     }
   }
 
@@ -137,6 +137,6 @@ export class UserService {
       throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
     }
     await this.authCacheService.wipeAccessTokens(userId);
-    await this.filesService.cleanupOrphanedFiles();
+    await this.fileService.cleanupOrphanedFiles();
   }
 }

@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { FilesService } from '../file/files.service';
+import { FileService } from '../file/file.service';
 import { UserService } from '../user/user.service';
 import { COLLECTION_VALIDATION_ERRORS } from './collection.constants';
 import { CreateCollectionDto } from './dto/create-collection.dto';
@@ -17,34 +17,32 @@ import Collection from './entities/collection.entity';
 export class CollectionService {
   constructor(
     @InjectRepository(Collection)
-    private collectionsRepository: Repository<Collection>,
-    private filesService: FilesService,
-    private usersService: UserService,
+    private collectionRepository: Repository<Collection>,
+    private fileService: FileService,
+    private userService: UserService,
   ) {}
 
   public async saveEntity(collection: Collection): Promise<void> {
-    await this.collectionsRepository.save(collection);
+    await this.collectionRepository.save(collection);
   }
 
   public async create(
     userId: string,
     createCollectionDto: CreateCollectionDto,
   ): Promise<Collection> {
-    const newCollection =
-      this.collectionsRepository.create(createCollectionDto);
+    const newCollection = this.collectionRepository.create(createCollectionDto);
 
-    const user = await this.usersService.findOneWithRelations(userId, [
+    const user = await this.userService.findOneWithRelations(userId, [
       'collections',
     ]);
 
     user.collections = [...user.collections, newCollection];
-    await this.usersService.saveEntity(user);
-
+    await this.userService.saveEntity(user);
     return newCollection;
   }
 
   public async findOne(id: string): Promise<Collection> {
-    const collection = this.collectionsRepository.findOneBy({ id });
+    const collection = this.collectionRepository.findOneBy({ id });
 
     if (!collection) {
       throw new NotFoundException(
@@ -63,7 +61,7 @@ export class CollectionService {
     id: string,
     relations: string[] = [],
   ): Promise<Collection> {
-    const collection = this.collectionsRepository.findOne({
+    const collection = this.collectionRepository.findOne({
       where: { id },
       relations: relations,
     });
@@ -78,7 +76,7 @@ export class CollectionService {
   }
 
   public async getAllUsersCollections(userId: string): Promise<Collection[]> {
-    const user = await this.usersService.findOneWithRelations(userId, [
+    const user = await this.userService.findOneWithRelations(userId, [
       'collections',
     ]);
     return user.collections;
@@ -87,7 +85,7 @@ export class CollectionService {
   public async getPublicUsersCollections(
     username: string,
   ): Promise<Collection[]> {
-    const user = await this.usersService.findOneByUsername(username, [
+    const user = await this.userService.findOneByUsername(username, [
       'collections',
     ]);
     return user.collections.filter(
@@ -106,8 +104,8 @@ export class CollectionService {
     id: string,
     updateCollectionDto: UpdateCollectionDto,
   ): Promise<Collection> {
-    await this.collectionsRepository.update(id, updateCollectionDto);
-    const updatedCollection = await this.collectionsRepository.findOneBy({
+    await this.collectionRepository.update(id, updateCollectionDto);
+    const updatedCollection = await this.collectionRepository.findOneBy({
       id,
     });
 
@@ -121,7 +119,7 @@ export class CollectionService {
   }
 
   public async remove(userId: string, collectionId: string): Promise<void> {
-    const collection = await this.collectionsRepository.findOne({
+    const collection = await this.collectionRepository.findOne({
       where: { id: collectionId },
       relations: ['user'],
     });
@@ -131,14 +129,12 @@ export class CollectionService {
         COLLECTION_VALIDATION_ERRORS.ACCESS_NOT_PERMITTED,
       );
 
-    const deleteResponse = await this.collectionsRepository.delete(
-      collectionId,
-    );
+    const deleteResponse = await this.collectionRepository.delete(collectionId);
     if (!deleteResponse.affected) {
       throw new NotFoundException(
         COLLECTION_VALIDATION_ERRORS.COLLECTION_NOT_FOUND,
       );
     }
-    await this.filesService.cleanupOrphanedFiles();
+    await this.fileService.cleanupOrphanedFiles();
   }
 }
