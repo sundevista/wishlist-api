@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SearchModule } from '../search/search.module';
 
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
@@ -9,7 +10,12 @@ import { AuthCacheService } from '../../auth/auth-cache.service';
 import { TokenModule } from '../../auth/token/token.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), FileModule, TokenModule],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    FileModule,
+    TokenModule,
+    SearchModule,
+  ],
   controllers: [UserController],
   providers: [UserService, AuthCacheService],
   exports: [UserService],

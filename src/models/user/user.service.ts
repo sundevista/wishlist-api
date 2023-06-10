@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { AuthCacheService } from '../../auth/auth-cache.service';
 import PublicFile from '../file/entities/publicFile.entity';
+import SearchService from '../search/search.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -16,6 +17,7 @@ export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     private fileService: FileService,
+    private searchService: SearchService,
     private authCacheService: AuthCacheService,
   ) {}
 
@@ -42,8 +44,16 @@ export class UserService {
       password: hashedPassword,
     });
     await this.userRepository.save(newUser);
+    await this.searchService.indexUser(newUser);
 
     return newUser;
+  }
+
+  public async searchUsers(text: string): Promise<User[]> {
+    const results = await this.searchService.searchUser(text);
+    const ids = results.map((result) => result.id);
+    if (!ids.length) return [];
+    return this.userRepository.find({ where: { id: In(ids) } });
   }
 
   public async findAll(): Promise<User[]> {
@@ -120,6 +130,8 @@ export class UserService {
       throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
     }
 
+    await this.searchService.update(updatedUser);
+
     return updatedUser;
   }
 
@@ -156,6 +168,7 @@ export class UserService {
     if (!deleteResponse.affected) {
       throw new NotFoundException(USER_VALIDATION_ERRORS.USER_NOT_FOUND);
     }
+    await this.searchService.remove(userId);
     await this.authCacheService.wipeAccessTokens(userId);
     await this.fileService.cleanupOrphanedFiles();
   }

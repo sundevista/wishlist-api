@@ -31,3 +31,7 @@ Migrations don't run automatically on the application start.
 - Generate migration: `npm run migration:generate --name=<name>`
 - Run migrations: `npm run migration:run`
 - Revert migration: `npm run migration:down`
+
+## Known Issues
+
+- You may not start elasticsearch in docker without expanding virtual memory ([solutions](https://stackoverflow.com/questions/51445846/elasticsearch-max-virtual-memory-areas-vm-max-map-count-65530-is-too-low-inc))

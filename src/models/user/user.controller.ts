@@ -65,6 +65,16 @@ export class UserController {
     return this.userService.findOneWithRelations(userId);
   }
 
+  @ApiOperation({ summary: SWAGGER_USER_SUMMARY.SEARCH_USERS })
+  @ApiCreatedResponse({ type: Array<User> })
+  @ApiBearerAuth('JWT')
+  @UseGuards(JwtAuthGuard)
+  @SerializeOptions({ groups: [USER_VISIBILITY_LEVELS.FETCH_USERS] })
+  @Get('search/:text')
+  public async searchUsers(@Param('text') text: string): Promise<User[]> {
+    return this.userService.searchUsers(text);
+  }
+
   @ApiOperation({ summary: SWAGGER_USER_SUMMARY.UPDATE })
   @ApiCreatedResponse({ type: User })
   @ApiBody({ type: UpdateUserDto })

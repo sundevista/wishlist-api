@@ -22,4 +22,9 @@ export default () => ({
     refreshTokenSecret: process.env.JWT_REFRESH_TOKEN_SECRET,
     refreshTokenExpirationTime: +process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME,
   },
+  elasticsearch: {
+    node: process.env.ELASTICSEARCH_NODE,
+    username: process.env.ELASTICSEARCH_USERNAME,
+    password: process.env.ELASTICSEARCH_PASSWORD,
+  },
 });
