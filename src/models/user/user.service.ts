@@ -65,6 +65,26 @@ export class UserService {
     return user;
   }
 
+  public async checkUsernameForAvailability(
+    username: string,
+  ): Promise<boolean> {
+    try {
+      await this.findOneByUsername(username);
+      return false;
+    } catch (err) {
+      return true;
+    }
+  }
+
+  public async checkEmailForAvailability(email: string): Promise<boolean> {
+    try {
+      await this.findOneByEmail(email);
+      return false;
+    } catch (err) {
+      return true;
+    }
+  }
+
   public async findOneByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ email });
 

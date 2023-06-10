@@ -11,7 +11,6 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
-  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -19,7 +18,6 @@ import {
   ApiConsumes,
   ApiCreatedResponse,
   ApiOperation,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -110,26 +108,20 @@ export class UserController {
   }
 
   @ApiOperation({ summary: SWAGGER_USER_SUMMARY.IS_USERNAME_AVAILABLE })
-  @ApiResponse({
-    status: 404,
-    description: SWAGGER_USER_RESPONSES.USER_NOT_FOUND,
-  })
+  @ApiCreatedResponse({ type: Boolean })
   @Get('availability/checkUsername/:username')
   public async isUsernameAvailable(
     @Param('username') username: string,
-  ): Promise<string> {
-    return (await this.userService.findOneByUsername(username)).username;
+  ): Promise<boolean> {
+    return this.userService.checkUsernameForAvailability(username);
   }
 
   @ApiOperation({ summary: SWAGGER_USER_SUMMARY.IS_EMAIL_AVAILABLE })
-  @ApiResponse({
-    status: 404,
-    description: SWAGGER_USER_RESPONSES.USER_NOT_FOUND,
-  })
+  @ApiCreatedResponse({ type: Boolean })
   @Get('availability/checkEmail/:email')
   public async isEmailAvailable(
     @Param('email') email: string,
-  ): Promise<string> {
-    return (await this.userService.findOneByEmail(email)).email;
+  ): Promise<boolean> {
+    return this.userService.checkEmailForAvailability(email);
   }
 }

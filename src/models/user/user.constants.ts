@@ -23,8 +23,8 @@ export const SWAGGER_USER_SUMMARY = {
   UPDATE: 'Updates user data',
   ADD_AVATAR: "Uploads user's avatar",
   REMOVE_SELF: 'Removes user account',
-  IS_USERNAME_AVAILABLE: 'Checks username for availability',
-  IS_EMAIL_AVAILABLE: 'Checks email for availability',
+  IS_USERNAME_AVAILABLE: 'Returns true if username is available',
+  IS_EMAIL_AVAILABLE: 'Returns true if email is available',
 };
 
 export const SWAGGER_USER_RESPONSES = {
