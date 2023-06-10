@@ -27,8 +27,3 @@ export const SWAGGER_USER_SUMMARY = {
   IS_USERNAME_AVAILABLE: 'Returns true if username is available',
   IS_EMAIL_AVAILABLE: 'Returns true if email is available',
 };
-
-export const SWAGGER_USER_RESPONSES = {
-  USER_NOT_FOUND: 'User with given credentials was not found',
-  USER_FOUND: 'User with given credentials was found',
-};
