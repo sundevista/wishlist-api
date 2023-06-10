@@ -37,8 +37,6 @@ import {
   USER_VISIBILITY_LEVELS,
 } from './user.constants';
 import PublicFileEntity from '../file/entities/publicFile.entity';
-import { UsernameQueryDto } from './dto/username-query.dto';
-import { EmailQueryDto } from './dto/email-query.dto';
 import { FileUploadDto } from './dto/file-upload.dto';
 
 @ApiTags('users')
@@ -112,29 +110,26 @@ export class UserController {
   }
 
   @ApiOperation({ summary: SWAGGER_USER_SUMMARY.IS_USERNAME_AVAILABLE })
-  @ApiQuery({ name: 'username', type: String })
   @ApiResponse({
     status: 404,
     description: SWAGGER_USER_RESPONSES.USER_NOT_FOUND,
   })
-  @Get('availability/isUsernameAvailable')
+  @Get('availability/checkUsername/:username')
   public async isUsernameAvailable(
-    @Query() usernameQuery: UsernameQueryDto,
+    @Param('username') username: string,
   ): Promise<string> {
-    return (await this.userService.findOneByUsername(usernameQuery.username))
-      .username;
+    return (await this.userService.findOneByUsername(username)).username;
   }
 
   @ApiOperation({ summary: SWAGGER_USER_SUMMARY.IS_EMAIL_AVAILABLE })
-  @ApiQuery({ name: 'email', type: String })
   @ApiResponse({
     status: 404,
     description: SWAGGER_USER_RESPONSES.USER_NOT_FOUND,
   })
-  @Get('availability/isEmailAvailable')
+  @Get('availability/checkEmail/:email')
   public async isEmailAvailable(
-    @Query() emailQuery: EmailQueryDto,
+    @Param('email') email: string,
   ): Promise<string> {
-    return (await this.userService.findOneByEmail(emailQuery.email)).email;
+    return (await this.userService.findOneByEmail(email)).email;
   }
 }
