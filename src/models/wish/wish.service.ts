@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CollectionService } from '../collection/collection.service';
+import PublicFile from '../file/entities/publicFile.entity';
 import { FileService } from '../file/file.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { UpdateWishDto } from './dto/update-wish.dto';
@@ -23,7 +24,7 @@ export class WishService {
     collectionId: string,
     file: Express.Multer.File,
     createWishDto: CreateWishDto,
-  ) {
+  ): Promise<Wish> {
     const collection = await this.collectionService.findOneWithRelations(
       collectionId,
       ['user', 'wishes'],
@@ -42,7 +43,7 @@ export class WishService {
     return newWish;
   }
 
-  public async findOne(id: string) {
+  public async findOne(id: string): Promise<Wish> {
     const wish = await this.wishRepository.findOneBy({ id });
 
     if (!wish)
@@ -63,7 +64,7 @@ export class WishService {
     userId: string,
     wishId: string,
     updateWishDto: UpdateWishDto,
-  ) {
+  ): Promise<Wish> {
     const wish = await this.wishRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],
@@ -84,7 +85,7 @@ export class WishService {
     wishId: string,
     imageBuffer: Buffer,
     filename: string,
-  ) {
+  ): Promise<PublicFile> {
     await this.deleteImage(userId, wishId);
 
     const image = await this.fileService.uploadPublicFile(
@@ -95,7 +96,7 @@ export class WishService {
     return image;
   }
 
-  public async deleteImage(userId: string, wishId: string) {
+  public async deleteImage(userId: string, wishId: string): Promise<void> {
     const wish = await this.wishRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],
@@ -112,7 +113,7 @@ export class WishService {
     }
   }
 
-  public async remove(userId: string, wishId: string) {
+  public async remove(userId: string, wishId: string): Promise<void> {
     const wish = await this.wishRepository.findOne({
       where: { id: wishId },
       relations: ['collection', 'collection.user'],
