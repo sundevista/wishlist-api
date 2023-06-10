@@ -18,7 +18,6 @@ import {
   ApiConsumes,
   ApiCreatedResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -29,11 +28,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { TypeOrmValidationErrorFilter } from '../../utils/exceptions/type-orm-validation-error.filter';
 import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 import { UserData } from './decorator/user.decorator';
-import {
-  SWAGGER_USER_RESPONSES,
-  SWAGGER_USER_SUMMARY,
-  USER_VISIBILITY_LEVELS,
-} from './user.constants';
+import { SWAGGER_USER_SUMMARY, USER_VISIBILITY_LEVELS } from './user.constants';
 import PublicFileEntity from '../file/entities/publicFile.entity';
 import { FileUploadDto } from './dto/file-upload.dto';
 
