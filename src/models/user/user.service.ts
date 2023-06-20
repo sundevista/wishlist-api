@@ -123,6 +123,10 @@ export class UserService {
     userId: string,
     updateUserDto: UpdateUserDto,
   ): Promise<User> {
+    if (updateUserDto?.password)
+      updateUserDto.password = await this.hashedPassword(
+        updateUserDto.password,
+      );
     await this.userRepository.update(userId, updateUserDto);
     const updatedUser = await this.userRepository.findOneBy({ id: userId });
 
