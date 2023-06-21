@@ -18,7 +18,7 @@ export class TokenService {
 
   constructor(
     @InjectRepository(RefreshToken)
-    private tokenRepository: Repository<RefreshToken>,
+    private readonly tokenRepository: Repository<RefreshToken>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly authCacheService: AuthCacheService,

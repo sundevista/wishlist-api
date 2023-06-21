@@ -32,7 +32,6 @@ export class AuthController {
   @ApiOperation({ summary: SWAGGER_AUTH_SUMMARY.REGISTRATION })
   @ApiCreatedResponse({ type: UserWithTokensDto })
   @ApiBody({ type: CreateUserDto })
-  @ApiBearerAuth('JWT')
   @UseFilters(TypeOrmValidationErrorFilter)
   @Post('registration')
   public async registration(
@@ -64,16 +63,5 @@ export class AuthController {
     @UserData('accessToken') accessToken: string,
   ): Promise<void> {
     return this.authService.logout(userId, accessToken, logoutDto.refreshToken);
-  }
-
-  @ApiOperation({ summary: 'check' })
-  @ApiBearerAuth('JWT')
-  @UseGuards(JwtAuthGuard)
-  @Post('check')
-  public async check(
-    @UserData('userId') userId: string,
-    @UserData('accessToken') accessToken: string,
-  ): Promise<string> {
-    return userId + ' === ' + accessToken;
   }
 }
