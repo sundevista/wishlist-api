@@ -1,12 +1,12 @@
-version: "3.8"
+version: '3.8'
 services:
   postgres:
     image: postgres:15.1
-    container_name: postgres
+    container_name: wl-postgres
     volumes:
       - /data/postgres:/data/postgres
     ports:
-      - "${DB_PORT}:5432"
+      - '${DB_PORT}:5432'
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USERNAME}
@@ -17,7 +17,7 @@ services:
       - general
   redis:
     image: redis:alpine
-    container_name: redis
+    container_name: wl-redis
     volumes:
       - ./.docker/redis:/redis
     ports:
@@ -27,12 +27,12 @@ services:
     networks:
       - general
   redis-commander:
-    container_name: redis-commander
+    container_name: wl-redis-commander
     image: rediscommander/redis-commander:latest
     environment:
       - REDIS_HOSTS=local:redis:6379
     ports:
-      - "8081:8081"
+      - '8081:8081'
     networks:
       - general
   es01:
@@ -45,7 +45,7 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     ulimits:
       memlock:
         soft: -1
@@ -53,7 +53,7 @@ services:
     volumes:
       - data01:/usr/share/elasticsearch/data
     ports:
-      - "9200:9200"
+      - '9200:9200'
     networks:
       - general
     env_file:
@@ -69,7 +69,7 @@ services:
       - cluster.initial_master_nodes=es01
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     ulimits:
       memlock:
         soft: -1
@@ -91,7 +91,7 @@ services:
       - cluster.initial_master_nodes=es01
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     ulimits:
       memlock:
         soft: -1
@@ -102,20 +102,6 @@ services:
       - .env
     networks:
       - general
-  api:
-    build:
-      dockerfile: Dockerfile
-      context: .
-      target: production
-    env_file:
-      - .env
-    ports:
-      - "3000:3000"
-    networks:
-      - general
-    depends_on:
-      - postgres
-      - redis
 
 volumes:
   data01:
