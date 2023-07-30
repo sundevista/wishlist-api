@@ -27,6 +27,13 @@ export class User {
   @Column({ type: 'varchar', length: 25, unique: true, nullable: false })
   public username: string;
 
+  @Expose({
+    groups: [
+      USER_VISIBILITY_LEVELS.FETCH_USERS,
+      USER_VISIBILITY_LEVELS.FETCH_ONE,
+    ],
+  })
+  @Column({ type: 'varchar', nullable: false, default: '', length: 120 })
   @Expose({ groups: [USER_VISIBILITY_LEVELS.FETCH_ME] })
   @Column({ type: 'varchar', length: 70, unique: true, nullable: false })
   public email: string;
